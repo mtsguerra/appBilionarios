@@ -18,7 +18,7 @@ cp /caminho/para/seu/b.db .
 
 **Opção B: Criar banco de exemplo**
 ```bash
-python create_sample_b_db.py
+python create_b_db.py
 ```
 
 ### 3. Verificar Banco (1 min - Opcional)
