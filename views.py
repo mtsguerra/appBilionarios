@@ -207,16 +207,17 @@ def all_list():
 @app.route('/all-list/q1/<input>')
 def all_list_by_age(input):
     """List billionaires ordered by age."""
+    # Validate and sanitize order direction - only allow ASC or DESC
     order = 'ASC' if input.upper() == 'ASC' else 'DESC'
     conn = get_db()
-    query = f'''
+    # Safe to use order variable here as it's strictly validated above
+    query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth, b.source,
             p.countryOfCitizenship, p.age
         FROM BILLIONAIRE b
         LEFT JOIN PERSONAL p ON b.rank = p.rank
-        ORDER BY p.age {order}
-    '''
+        ORDER BY p.age ''' + order
     cursor = conn.execute(query)
     billionaires = cursor.fetchall()
     conn.close()
@@ -449,9 +450,11 @@ def industries_amount(input):
 @app.route('/industries/q3/<input>')
 def industries_wealth(input):
     """Total wealth by industry ordered."""
+    # Validate and sanitize order direction - only allow ASC or DESC
     order = 'ASC' if input.upper() == 'ASC' else 'DESC'
     conn = get_db()
-    query = f'''
+    # Safe to use order variable here as it's strictly validated above
+    query = '''
         SELECT 
             c.category,
             COUNT(DISTINCT b.rank) as billionaireCount,
@@ -459,8 +462,7 @@ def industries_wealth(input):
         FROM COMPANY c
         LEFT JOIN BILLIONAIRE b ON c.source = b.source
         GROUP BY c.category
-        ORDER BY totalWorth {order}
-    '''
+        ORDER BY totalWorth ''' + order
     cursor = conn.execute(query)
     industries = cursor.fetchall()
     conn.close()
