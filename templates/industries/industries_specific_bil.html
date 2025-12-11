@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ industry }} - Bilionários{% endblock %}
+{% block title %}{{ industry }} - Billionaires{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='industries.css') }}">
@@ -8,21 +8,21 @@
 
 {% block content %}
 <div class="industries-container">
-    <h1>🏭 Bilionários em {{ industry }}</h1>
-    <a href="/industries" class="btn-back">← Voltar às Indústrias</a>
+    <h1>🏭 Billionaires in {{ industry }}</h1>
+    <a href="/industries" class="btn-back">← Back to Industries</a>
     
-    <p class="subtitle">Total: {{ billionaires|length }} bilionários</p>
+    <p class="subtitle">Total: {{ billionaires|length }} billionaires</p>
     
     <div class="industries-table">
         <table>
             <thead>
                 <tr>
-                    <th>Ranking</th>
-                    <th>Nome</th>
-                    <th>Patrimônio (Bilhões)</th>
-                    <th>País</th>
-                    <th>Fonte</th>
-                    <th>Indústrias</th>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Net Worth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
+                    <th>Industries</th>
                 </tr>
             </thead>
             <tbody>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Q7 - Bilionários com Idade > 50 e Rank ≥ 50{% endblock %}
+{% block title %}Q7 - Billionaires Age > 50 and Rank ≥ 50{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,21 +8,21 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>👴 Q7: Bilionários com Mais de 50 Anos e Ranking ≥ 50</h1>
-    <a href="/perguntas-bd" class="btn-back">← Voltar às Perguntas</a>
+    <h1>👴 Q7: Billionaires Over 50 Years Old and Rank ≥ 50</h1>
+    <a href="/perguntas-bd" class="btn-back">← Back to Questions</a>
     
-    <p class="subtitle">Total: {{ billionaires|length }} bilionários</p>
+    <p class="subtitle">Total: {{ billionaires|length }} billionaires</p>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Ranking</th>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Patrimônio (Bilhões)</th>
-                    <th>País</th>
-                    <th>Fonte</th>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Net Worth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
                 </tr>
             </thead>
             <tbody>

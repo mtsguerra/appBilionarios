@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Perguntas do Banco de Dados{% endblock %}
+{% block title %}Database Questions{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,92 +8,92 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>📊 Perguntas do Banco de Dados</h1>
-    <p class="subtitle">Explore as 14 consultas disponíveis no banco de dados de bilionários</p>
+    <h1>📊 Database Questions</h1>
+    <p class="subtitle">Explore the 14 available queries in the billionaires database</p>
     
     <div class="questions-grid">
         <div class="question-card implemented">
-            <h3>✅ Q1: Bilionários dos EUA</h3>
-            <p>Todos os bilionários dos Estados Unidos</p>
-            <a href="/perguntas-bd/q1" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q1: USA Billionaires</h3>
+            <p>All billionaires from the United States</p>
+            <a href="/perguntas-bd/q1" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q2: Top 10 por País</h3>
-            <p>Top 10 bilionários filtrados por país</p>
-            <a href="/top10" class="btn-query">Ver em Top 10</a>
+            <h3>✅ Q2: Top 10 by Country</h3>
+            <p>Top 10 billionaires filtered by country</p>
+            <a href="/top10" class="btn-query">View in Top 10</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q3: Região Oeste dos EUA</h3>
-            <p>Bilionários da região oeste dos Estados Unidos</p>
-            <a href="/perguntas-bd/q3" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q3: Western USA Region</h3>
+            <p>Billionaires from the western United States region</p>
+            <a href="/perguntas-bd/q3" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q4: Gênero Feminino</h3>
-            <p>Todas as bilionárias do gênero feminino</p>
-            <a href="/perguntas-bd/q4" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q4: Female Gender</h3>
+            <p>All female billionaires</p>
+            <a href="/perguntas-bd/q4" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q5: Cidades com Mais Bilionários</h3>
-            <p>Cidade com maior número de bilionários</p>
-            <a href="/perguntas-bd/q5" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q5: Cities with Most Billionaires</h3>
+            <p>City with highest number of billionaires</p>
+            <a href="/perguntas-bd/q5" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q6: Ordenar por Idade</h3>
-            <p>Bilionários ordenados por idade (crescente/decrescente)</p>
-            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+            <h3>✅ Q6: Sort by Age</h3>
+            <p>Billionaires sorted by age (ascending/descending)</p>
+            <a href="/all-list" class="btn-query">View in All List</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q7: Idade > 50 e Rank ≥ 50</h3>
-            <p>Bilionários com mais de 50 anos e ranking ≥ 50</p>
-            <a href="/perguntas-bd/q7" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q7: Age > 50 and Rank ≥ 50</h3>
+            <p>Billionaires over 50 years old and ranking ≥ 50</p>
+            <a href="/perguntas-bd/q7" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q8: Filtrar por Sobrenome</h3>
-            <p>Buscar bilionários por sobrenome</p>
-            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+            <h3>✅ Q8: Filter by Last Name</h3>
+            <p>Search billionaires by last name</p>
+            <a href="/all-list" class="btn-query">View in All List</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q9: Filtrar por Patrimônio Mínimo</h3>
-            <p>Bilionários com patrimônio acima de X milhões</p>
-            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+            <h3>✅ Q9: Filter by Minimum Wealth</h3>
+            <p>Billionaires with wealth above X millions</p>
+            <a href="/all-list" class="btn-query">View in All List</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q10: Cidades por Patrimônio</h3>
-            <p>Cidades com maiores patrimônios totais</p>
-            <a href="/perguntas-bd/q10" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q10: Cities by Wealth</h3>
+            <p>Cities with highest total wealth</p>
+            <a href="/perguntas-bd/q10" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q11: Taxa de Imposto por País</h3>
-            <p>Relação entre taxa total de imposto e bilionários por país</p>
-            <a href="/perguntas-bd/q11" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q11: Tax Rate by Country</h3>
+            <p>Relationship between total tax rate and billionaires by country</p>
+            <a href="/perguntas-bd/q11" class="btn-query">View Results</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q12: Comparação Patrimônio vs PIB</h3>
-            <p>Comparação de patrimônio dos bilionários vs PIB do país</p>
-            <a href="/countries" class="btn-query">Ver em Países</a>
+            <h3>✅ Q12: Wealth vs GDP Comparison</h3>
+            <p>Comparison of billionaires' wealth vs country GDP</p>
+            <a href="/countries" class="btn-query">View in Countries</a>
         </div>
         
         <div class="question-card existing">
-            <h3>✅ Q13: Expectativa de Vida</h3>
-            <p>Expectativa de vida restante dos bilionários por país</p>
-            <a href="/countries" class="btn-query">Ver em Países</a>
+            <h3>✅ Q13: Life Expectancy</h3>
+            <p>Remaining life expectancy of billionaires by country</p>
+            <a href="/countries" class="btn-query">View in Countries</a>
         </div>
         
         <div class="question-card implemented">
-            <h3>✅ Q14: Selfmade vs Educação</h3>
-            <p>Relação entre bilionários selfmade e educação terciária</p>
-            <a href="/perguntas-bd/q14" class="btn-query">Ver Resultados</a>
+            <h3>✅ Q14: Selfmade vs Education</h3>
+            <p>Relationship between selfmade billionaires and tertiary education</p>
+            <a href="/perguntas-bd/q14" class="btn-query">View Results</a>
         </div>
     </div>
 </div>

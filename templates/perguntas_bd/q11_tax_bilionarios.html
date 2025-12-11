@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Q11 - Taxa de Imposto por País{% endblock %}
+{% block title %}Q11 - Tax Rate by Country{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,20 +8,20 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>💵 Q11: Relação Taxa de Imposto e Bilionários por País</h1>
-    <a href="/perguntas-bd" class="btn-back">← Voltar às Perguntas</a>
+    <h1>💵 Q11: Tax Rate and Billionaires by Country</h1>
+    <a href="/perguntas-bd" class="btn-back">← Back to Questions</a>
     
-    <p class="subtitle">Análise de {{ countries|length }} países</p>
+    <p class="subtitle">Analysis of {{ countries|length }} countries</p>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>País</th>
-                    <th>Quantidade de Bilionários</th>
-                    <th>Taxa Total de Imposto (%)</th>
-                    <th>Patrimônio Total (Bilhões)</th>
-                    <th>Patrimônio Médio (Bilhões)</th>
+                    <th>Country</th>
+                    <th>Number of Billionaires</th>
+                    <th>Total Tax Rate (%)</th>
+                    <th>Total Net Worth (Billions)</th>
+                    <th>Average Net Worth (Billions)</th>
                 </tr>
             </thead>
             <tbody>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Bilionários - {{ last_name }}{% endblock %}
+{% block title %}Billionaires - {{ last_name }}{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,19 +8,19 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>📋 Bilionários com Sobrenome: {{ last_name }}</h1>
-    <a href="/all-list" class="btn-back">← Voltar à Lista Completa</a>
+    <h1>📋 Billionaires with Last Name: {{ last_name }}</h1>
+    <a href="/all-list" class="btn-back">← Back to All List</a>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Ranking</th>
-                    <th>Nome</th>
-                    <th>Sobrenome</th>
-                    <th>Patrimônio (Bilhões)</th>
-                    <th>Idade</th>
-                    <th>País</th>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Net Worth (Billions)</th>
+                    <th>Age</th>
+                    <th>Country</th>
                 </tr>
             </thead>
             <tbody>

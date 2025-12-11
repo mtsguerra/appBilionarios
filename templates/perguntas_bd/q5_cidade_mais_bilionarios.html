@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Q5 - Cidades com Mais Bilionários{% endblock %}
+{% block title %}Q5 - Cities with Most Billionaires{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,20 +8,20 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>🏙️ Q5: Cidades com Maior Número de Bilionários</h1>
-    <a href="/perguntas-bd" class="btn-back">← Voltar às Perguntas</a>
+    <h1>🏙️ Q5: Cities with Highest Number of Billionaires</h1>
+    <a href="/perguntas-bd" class="btn-back">← Back to Questions</a>
     
-    <p class="subtitle">Top {{ cities|length }} cidades por quantidade de bilionários</p>
+    <p class="subtitle">Top {{ cities|length }} cities by number of billionaires</p>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>Região</th>
-                    <th>Quantidade de Bilionários</th>
-                    <th>Patrimônio Total (Bilhões)</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Region</th>
+                    <th>Number of Billionaires</th>
+                    <th>Total Net Worth (Billions)</th>
                 </tr>
             </thead>
             <tbody>

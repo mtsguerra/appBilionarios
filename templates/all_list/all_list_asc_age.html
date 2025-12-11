@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Todos os Bilionários - Ordenados por Idade{% endblock %}
+{% block title %}All Billionaires - Sorted by Age{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,19 +8,19 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>📋 Bilionários Ordenados por Idade ({{ 'Crescente' if order == 'ASC' else 'Decrescente' }})</h1>
-    <a href="/all-list" class="btn-back">← Voltar à Lista Completa</a>
+    <h1>📋 Billionaires Sorted by Age ({{ 'Ascending' if order == 'ASC' else 'Descending' }})</h1>
+    <a href="/all-list" class="btn-back">← Back to All List</a>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Ranking</th>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Patrimônio (Bilhões)</th>
-                    <th>País</th>
-                    <th>Fonte</th>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Net Worth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
                 </tr>
             </thead>
             <tbody>

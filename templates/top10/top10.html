@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Top 10 Bilionários{% endblock %}
+{% block title %}Top 10 Billionaires{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='top10.css') }}">
@@ -8,25 +8,25 @@
 
 {% block content %}
 <div class="top10-container">
-    <h1>🏆 Top 10 Bilionários</h1>
+    <h1>🏆 Top 10 Billionaires</h1>
     
     <div class="search-forms">
         <form action="/top10/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q1/' + this.country.value;">
-            <label>Buscar por País:</label>
-            <input type="text" name="country" placeholder="ex: Estados Unidos" required>
-            <button type="submit">Buscar</button>
+            <label>Search by Country:</label>
+            <input type="text" name="country" placeholder="e.g.: United States" required>
+            <button type="submit">Search</button>
         </form>
         
         <form action="/top10/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q2/' + this.industry.value;">
-            <label>Buscar por Indústria:</label>
-            <input type="text" name="industry" placeholder="ex: Tecnologia" required>
-            <button type="submit">Buscar</button>
+            <label>Search by Industry:</label>
+            <input type="text" name="industry" placeholder="e.g.: Technology" required>
+            <button type="submit">Search</button>
         </form>
         
         <form action="/top10/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q3/' + this.age.value;">
-            <label>Buscar por Idade Máxima:</label>
-            <input type="number" name="age" placeholder="ex: 50" required>
-            <button type="submit">Buscar</button>
+            <label>Search by Maximum Age:</label>
+            <input type="number" name="age" placeholder="e.g.: 50" required>
+            <button type="submit">Search</button>
         </form>
     </div>
     
@@ -34,11 +34,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>Ranking</th>
-                    <th>Nome</th>
-                    <th>Patrimônio (Bilhões)</th>
-                    <th>País</th>
-                    <th>Fonte</th>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Net Worth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
                 </tr>
             </thead>
             <tbody>
