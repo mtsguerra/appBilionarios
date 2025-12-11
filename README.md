@@ -16,21 +16,48 @@ A complete Flask web application for querying and visualizing global billionaire
 
 ## Database Structure
 
+The application uses a **normalized database schema** with proper foreign key relationships:
+
 ### Tables
 
-1. **BILLIONAIRE**: Core billionaire data (rank, name, worth, company, city)
-2. **PERSONAL**: Personal information (age, gender, birthdate, citizenship)
-3. **COMPANY**: Company/source of wealth (organization, category, industries)
-4. **CITY**: City information (state, region)
-5. **COUNTRY**: Country demographics (population, life expectancy, education)
-6. **COUNTRYECONOMY**: Economic indicators (GDP, CPI, tax rates)
+1. **BILLIONARIES**: Main billionaire data with all personal information (id as PK)
+   - Includes: rank, finalWorth, personName, age, firstName, lastName, birthDate, gender, selfMade, countryOfCitizenship, status
+   - Foreign key to CITY (via city id)
+
+2. **CITY**: City information (id as PK)
+   - Includes: cityName, state, residenceStateRegion
+   - Foreign key to COUNTRY (via country id)
+
+3. **COUNTRY**: Country demographics and economic data (id as PK)
+   - Includes: countryName, population, lifeExpectancy, education metrics, GDP, tax rates, CPI, coordinates
+
+4. **COMPANY**: Company/source of wealth (id as PK)
+   - Includes: source, organization, category, industries
+
+5. **WORKS**: Junction table for billionaire-company relationships (id as PK)
+   - Links BILLIONARIES to COMPANY (many-to-many)
+   - Includes: billionaire_id (FK), company_id (FK), title
 
 ### Relationships
-- BILLIONAIRE ←→ PERSONAL (1:1, via rank)
-- BILLIONAIRE → COMPANY (N:1, via source)
-- BILLIONAIRE → CITY (N:1, via cityName)
-- PERSONAL → COUNTRY (N:1, via countryOfCitizenship)
-- COUNTRY ←→ COUNTRYECONOMY (1:1, via countryName)
+- BILLIONARIES → CITY → COUNTRY (through foreign keys)
+- BILLIONARIES ←→ WORKS ←→ COMPANY (many-to-many via junction table)
+
+### Database Recreation
+The `recreate_database.sql` script provides a complete, standalone way to recreate the database:
+- Drop existing tables in correct order
+- Create all tables with proper schema
+- Insert sample data (10 records per table)
+- Set up indexes for performance
+
+Use it with:
+```bash
+sqlite3 billionaires.db < recreate_database.sql
+```
+
+Or use the Python initialization script:
+```bash
+python init_db.py
+```
 
 ## The 14 Database Questions
 
@@ -157,19 +184,29 @@ http://localhost:5000/perguntas-bd/q14
 
 ```
 appBilionarios/
-├── app.py                 # Main Flask application
-├── init_db.py            # Database initialization script
-├── schema.sql            # Database schema definition
-├── requirements.txt      # Python dependencies
-├── billionaires.db       # SQLite database (created after init)
-├── templates/
-│   └── index.html       # Main web interface
-├── static/
-│   ├── css/
-│   │   └── style.css    # Styling
-│   └── js/
-│       └── app.js       # Frontend JavaScript
-└── README.md            # This file
+├── app.py                    # Main Flask application
+├── views.py                  # Route handlers and database queries
+├── db.py                     # Database helper functions
+├── init_db.py               # Database initialization script
+├── recreate_database.sql    # Complete database recreation script (normalized schema)
+├── schema.sql               # Original database schema (for reference)
+├── requirements.txt         # Python dependencies
+├── billionaires.db          # SQLite database (created after init, .gitignore'd)
+├── templates/               # HTML templates organized by section
+│   ├── home/
+│   ├── top10/
+│   ├── all_list/
+│   ├── countries/
+│   ├── industries/
+│   ├── subject/
+│   ├── perguntas_bd/
+│   └── navbar/
+├── static/                  # Static assets (CSS)
+│   ├── base.css
+│   ├── navbar.css
+│   ├── home.css
+│   └── ...
+└── README.md               # This file
 ```
 
 ## Development
