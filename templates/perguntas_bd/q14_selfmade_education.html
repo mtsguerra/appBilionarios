@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Q14 - Selfmade vs Educação Terciária{% endblock %}
+{% block title %}Q14 - Selfmade vs Tertiary Education{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,21 +8,21 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>🎓 Q14: Relação entre Selfmade e Educação Terciária</h1>
-    <a href="/perguntas-bd" class="btn-back">← Voltar às Perguntas</a>
+    <h1>🎓 Q14: Relationship between Selfmade and Tertiary Education</h1>
+    <a href="/perguntas-bd" class="btn-back">← Back to Questions</a>
     
-    <p class="subtitle">Análise de {{ countries|length }} países</p>
+    <p class="subtitle">Analysis of {{ countries|length }} countries</p>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>País</th>
-                    <th>Educação Terciária (%)</th>
-                    <th>Total de Bilionários</th>
-                    <th>Selfmade</th>
-                    <th>% Selfmade</th>
-                    <th>Patrimônio Médio (Bilhões)</th>
+                    <th>Country</th>
+                    <th>Tertiary Education (%)</th>
+                    <th>Total Billionaires</th>
+                    <th>Self-made</th>
+                    <th>% Self-made</th>
+                    <th>Average Net Worth (Billions)</th>
                 </tr>
             </thead>
             <tbody>

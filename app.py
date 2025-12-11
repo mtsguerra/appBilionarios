@@ -12,6 +12,6 @@ def add_header(response):
     return response
 
 if __name__ == '__main__':
-    # Apenas ativar modo debug se explicitamente definido via variável de ambiente
+    # Only activate debug mode if explicitly defined via environment variable
     debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     app.run(debug=debug_mode)

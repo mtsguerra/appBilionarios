@@ -1,24 +1,24 @@
-"""Views para a aplicação web de Bilionários."""
+"""Views for the Billionaires web application."""
 import sqlite3
 from flask import render_template
 from app import app
 
 
 def get_db():
-    """Cria uma conexão com o banco de dados com configurações de segurança."""
+    """Create a database connection with security settings."""
     conn = sqlite3.connect('billionaires.db')
     conn.row_factory = sqlite3.Row
-    # Configurações de segurança
+    # Security settings
     conn.execute("PRAGMA trusted_schema = OFF;")
     conn.execute("PRAGMA cell_size_check = ON;")
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
 
-# Rotas Home e Top 10
+# Home and Top 10 Routes
 @app.route('/')
 def home():
-    """Página inicial com top 10 bilionários."""
+    """Home page with top 10 billionaires."""
     conn = get_db()
     query = '''
         SELECT 
@@ -37,7 +37,7 @@ def home():
 
 @app.route('/top10')
 def top10():
-    """Página de top 10 bilionários."""
+    """Top 10 billionaires page."""
     conn = get_db()
     query = '''
         SELECT 
@@ -56,7 +56,7 @@ def top10():
 
 @app.route('/top10/q1/<input>')
 def top10_by_country(input):
-    """Top 10 bilionários por país."""
+    """Top 10 billionaires by country."""
     country = input.capitalize()
     conn = get_db()
     query = '''
@@ -81,7 +81,7 @@ def top10_by_country(input):
 
 @app.route('/top10/q2/<input>')
 def top10_by_industry(input):
-    """Top 10 bilionários por indústria."""
+    """Top 10 billionaires by industry."""
     industry = input.capitalize()
     conn = get_db()
     query = '''
@@ -107,7 +107,7 @@ def top10_by_industry(input):
 
 @app.route('/top10/q3/<input>')
 def top10_by_age(input):
-    """Top 10 bilionários por faixa etária."""
+    """Top 10 billionaires by age group."""
     age = input
     conn = get_db()
     query = '''
@@ -130,13 +130,13 @@ def top10_by_age(input):
     return render_template('top10/top10-age.html', billionaires=billionaires, age=age)
 
 
-# Rota de Perfil do Bilionário
+# Billionaire Profile Route
 @app.route('/subject/<subject>')
 def subject(subject):
-    """Perfil individual do bilionário com navegação."""
+    """Individual billionaire profile with navigation."""
     conn = get_db()
     
-    # Obter bilionário atual
+    # Get current billionaire
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth, b.source, b.cityName,
@@ -153,9 +153,9 @@ def subject(subject):
     
     if not billionaire:
         conn.close()
-        return render_template('erro.html', message=f'Bilionário não encontrado: {subject}')
+        return render_template('erro.html', message=f'Billionaire not found: {subject}')
     
-    # Obter bilionário anterior
+    # Get previous billionaire
     prev_query = '''
         SELECT personName
         FROM BILLIONAIRE
@@ -166,7 +166,7 @@ def subject(subject):
     cursor = conn.execute(prev_query, (billionaire['rank'],))
     prev_billionaire = cursor.fetchone()
     
-    # Obter próximo bilionário
+    # Get next billionaire
     next_query = '''
         SELECT personName
         FROM BILLIONAIRE
@@ -185,10 +185,10 @@ def subject(subject):
                          next=next_billionaire['personName'] if next_billionaire else None)
 
 
-# Rotas de Lista Completa
+# All List Routes
 @app.route('/all-list')
 def all_list():
-    """Lista completa de bilionários."""
+    """Complete list of billionaires."""
     conn = get_db()
     query = '''
         SELECT 
@@ -206,8 +206,8 @@ def all_list():
 
 @app.route('/all-list/q1/<input>')
 def all_list_by_age(input):
-    """Lista bilionários ordenados por idade."""
-    # Validar e sanitizar direção da ordenação - apenas ASC ou DESC permitidos
+    """List billionaires sorted by age."""
+    # Validate and sanitize sort direction - only ASC or DESC allowed
     order = 'ASC' if input.upper() == 'ASC' else 'DESC'
     conn = get_db()
     # Safe to use order variable here as it's strictly validated above
@@ -226,7 +226,7 @@ def all_list_by_age(input):
 
 @app.route('/all-list/q2/<input>')
 def all_list_by_last_name(input):
-    """Filtrar bilionários por sobrenome."""
+    """Filter billionaires by last name."""
     last_name = input.capitalize()
     conn = get_db()
     query = '''
@@ -243,14 +243,14 @@ def all_list_by_last_name(input):
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message=f'Nenhum bilionário encontrado com sobrenome: {last_name}')
+        return render_template('erro.html', message=f'No billionaire found with last name: {last_name}')
     
     return render_template('all_list/all_list_by_last_name.html', billionaires=billionaires, last_name=last_name)
 
 
 @app.route('/all-list/q3/<input>')
 def all_list_by_wealth(input):
-    """Filtrar bilionários por patrimônio mínimo."""
+    """Filter billionaires by minimum net worth."""
     min_wealth = float(input)
     conn = get_db()
     query = '''
@@ -267,15 +267,15 @@ def all_list_by_wealth(input):
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message=f'Nenhum bilionário encontrado com patrimônio >= ${min_wealth}M')
+        return render_template('erro.html', message=f'No billionaire found with net worth >= ${min_wealth}M')
     
     return render_template('all_list/all_list_wealth.html', billionaires=billionaires, min_wealth=min_wealth)
 
 
-# Rotas de Países
+# Countries Routes
 @app.route('/countries')
 def countries():
-    """Lista de países com estatísticas."""
+    """List of countries with statistics."""
     conn = get_db()
     query = '''
         SELECT 
@@ -299,7 +299,7 @@ def countries():
 
 @app.route('/countries/q1/<input>')
 def countries_wealth_comparison(input):
-    """Comparar patrimônio dos bilionários com PIB per capita do país."""
+    """Compare billionaires' wealth with country's GDP per capita."""
     country = input.capitalize()
     conn = get_db()
     query = '''
@@ -327,7 +327,7 @@ def countries_wealth_comparison(input):
 
 @app.route('/countries/q2/<input>')
 def countries_born_in(input):
-    """Bilionários nascidos em um país específico."""
+    """Billionaires born in a specific country."""
     country = input.capitalize()
     conn = get_db()
     query = '''
@@ -344,14 +344,14 @@ def countries_born_in(input):
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message=f'Nenhum bilionário encontrado nascido em: {country}')
+        return render_template('erro.html', message=f'No billionaire found born in: {country}')
     
     return render_template('countries/countries_born_amount.html', billionaires=billionaires, country=country)
 
 
 @app.route('/countries/q3/<input>')
 def countries_life_expectancy(input):
-    """Calcular expectativa de vida restante para bilionários."""
+    """Calculate remaining life expectancy for billionaires."""
     country = input.capitalize()
     conn = get_db()
     query = '''
@@ -375,10 +375,10 @@ def countries_life_expectancy(input):
     return render_template('countries/countries_years_left.html', billionaires=billionaires, country=country)
 
 
-# Rotas de Indústrias
+# Industries Routes
 @app.route('/industries')
 def industries():
-    """Lista de indústrias com estatísticas."""
+    """List of industries with statistics."""
     conn = get_db()
     query = '''
         SELECT 
@@ -398,7 +398,7 @@ def industries():
 
 @app.route('/industries/q1/<input>')
 def industries_specific_billionaires(input):
-    """Bilionários em uma indústria específica."""
+    """Billionaires in a specific industry."""
     industry = input.capitalize()
     conn = get_db()
     query = '''
@@ -417,14 +417,14 @@ def industries_specific_billionaires(input):
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message=f'Nenhum bilionário encontrado na indústria: {industry}')
+        return render_template('erro.html', message=f'No billionaire found in industry: {industry}')
     
     return render_template('industries/industries_specific_bil.html', billionaires=billionaires, industry=industry)
 
 
 @app.route('/industries/q2/<input>')
 def industries_amount(input):
-    """Indústrias com mais de X bilionários."""
+    """Industries with more than X billionaires."""
     min_count = int(input)
     conn = get_db()
     query = '''
@@ -442,15 +442,15 @@ def industries_amount(input):
     conn.close()
     
     if not industries:
-        return render_template('erro.html', message=f'Nenhuma indústria encontrada com mais de {min_count} bilionários')
+        return render_template('erro.html', message=f'No industry found with more than {min_count} billionaires')
     
     return render_template('industries/industries_amount_of_bil.html', industries=industries, min_count=min_count)
 
 
 @app.route('/industries/q3/<input>')
 def industries_wealth(input):
-    """Patrimônio total por indústria ordenado."""
-    # Validar e sanitizar direção da ordenação - apenas ASC ou DESC permitidos
+    """Total net worth by industry sorted."""
+    # Validate and sanitize sort direction - only ASC or DESC allowed
     order = 'ASC' if input.upper() == 'ASC' else 'DESC'
     conn = get_db()
     # Safe to use order variable here as it's strictly validated above
@@ -470,16 +470,16 @@ def industries_wealth(input):
     return render_template('industries/industries_wealth.html', industries=industries, order=order)
 
 
-# Rotas de Perguntas do Banco de Dados
+# Database Questions Routes
 @app.route('/perguntas-bd')
 def perguntas_bd():
-    """Página com todas as 14 perguntas do banco de dados."""
+    """Page with all 14 database questions."""
     return render_template('perguntas_bd/perguntas_bd.html')
 
 
 @app.route('/perguntas-bd/q1')
 def bd_q1_bilionarios_eua():
-    """1. Todos bilionários dos EUA."""
+    """1. All USA billionaires."""
     conn = get_db()
     query = '''
         SELECT 
@@ -495,14 +495,14 @@ def bd_q1_bilionarios_eua():
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message='Nenhum bilionário encontrado dos EUA')
+        return render_template('erro.html', message='No billionaire found from USA')
     
     return render_template('perguntas_bd/q1_bilionarios_eua.html', billionaires=billionaires)
 
 
 @app.route('/perguntas-bd/q3')
 def bd_q3_regiao_oeste():
-    """3. Bilionários da região oeste dos EUA."""
+    """3. Billionaires from western USA region."""
     conn = get_db()
     query = '''
         SELECT 
@@ -521,14 +521,14 @@ def bd_q3_regiao_oeste():
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message='Nenhum bilionário encontrado na região oeste dos EUA')
+        return render_template('erro.html', message='No billionaire found in western USA region')
     
     return render_template('perguntas_bd/q3_regiao_oeste.html', billionaires=billionaires)
 
 
 @app.route('/perguntas-bd/q4')
 def bd_q4_genero_feminino():
-    """4. Bilionários do gênero feminino."""
+    """4. Female billionaires."""
     conn = get_db()
     query = '''
         SELECT 
@@ -544,14 +544,14 @@ def bd_q4_genero_feminino():
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message='Nenhuma bilionária do gênero feminino encontrada')
+        return render_template('erro.html', message='No female billionaire found')
     
     return render_template('perguntas_bd/q4_genero_feminino.html', billionaires=billionaires)
 
 
 @app.route('/perguntas-bd/q5')
 def bd_q5_cidade_mais_bilionarios():
-    """5. Cidade com maior número de bilionários."""
+    """5. City with highest number of billionaires."""
     conn = get_db()
     query = '''
         SELECT 
@@ -579,7 +579,7 @@ def bd_q5_cidade_mais_bilionarios():
 
 @app.route('/perguntas-bd/q7')
 def bd_q7_mais_50_anos_ranking():
-    """7. Bilionários com mais de 50 anos e ranking igual ou superior a 50."""
+    """7. Billionaires over 50 years old and rank equal to or greater than 50."""
     conn = get_db()
     query = '''
         SELECT 
@@ -595,14 +595,14 @@ def bd_q7_mais_50_anos_ranking():
     conn.close()
     
     if not billionaires:
-        return render_template('erro.html', message='Nenhum bilionário encontrado com esses critérios')
+        return render_template('erro.html', message='No billionaire found with these criteria')
     
     return render_template('perguntas_bd/q7_mais_50_ranking.html', billionaires=billionaires)
 
 
 @app.route('/perguntas-bd/q10')
 def bd_q10_cidades_maior_patrimonio():
-    """10. Cidades com os maiores patrimônios entre os bilionários que vivem lá."""
+    """10. Cities with the highest net worth among the billionaires living there."""
     conn = get_db()
     query = '''
         SELECT 
@@ -624,14 +624,14 @@ def bd_q10_cidades_maior_patrimonio():
     conn.close()
     
     if not cities:
-        return render_template('erro.html', message='Nenhuma cidade encontrada')
+        return render_template('erro.html', message='No city found')
     
     return render_template('perguntas_bd/q10_cidades_patrimonio.html', cities=cities)
 
 
 @app.route('/perguntas-bd/q11')
 def bd_q11_tax_bilionarios_pais():
-    """11. Relação de total tax e seus respectivos números de bilionários por país."""
+    """11. Relationship between total tax and their respective numbers of billionaires by country."""
     conn = get_db()
     query = '''
         SELECT 
@@ -659,7 +659,7 @@ def bd_q11_tax_bilionarios_pais():
 
 @app.route('/perguntas-bd/q14')
 def bd_q14_selfmade_education():
-    """14. Relação entre selfmade bilionários e gross tertiary education."""
+    """14. Relationship between selfmade billionaires and gross tertiary education."""
     conn = get_db()
     query = '''
         SELECT 
@@ -682,6 +682,6 @@ def bd_q14_selfmade_education():
     conn.close()
     
     if not countries:
-        return render_template('erro.html', message='Nenhum dado encontrado')
+        return render_template('erro.html', message='No data found')
     
     return render_template('perguntas_bd/q14_selfmade_education.html', countries=countries)

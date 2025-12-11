@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Indústrias - Bilionários{% endblock %}
+{% block title %}Industries - Billionaires{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='industries.css') }}">
@@ -8,28 +8,28 @@
 
 {% block content %}
 <div class="industries-container">
-    <h1>🏭 Bilionários por Indústria</h1>
+    <h1>🏭 Billionaires by Industry</h1>
     
     <div class="search-forms">
         <form action="/industries/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/industries/q1/' + this.industry.value;">
-            <label>Bilionários em Indústria Específica:</label>
-            <input type="text" name="industry" placeholder="ex: Tecnologia" required>
-            <button type="submit">Buscar</button>
+            <label>Billionaires in Specific Industry:</label>
+            <input type="text" name="industry" placeholder="e.g.: Technology" required>
+            <button type="submit">Search</button>
         </form>
         
         <form action="/industries/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/industries/q2/' + this.count.value;">
-            <label>Indústrias com Mais de X Bilionários:</label>
-            <input type="number" name="count" placeholder="ex: 2" required>
-            <button type="submit">Filtrar</button>
+            <label>Industries with More Than X Billionaires:</label>
+            <input type="number" name="count" placeholder="e.g.: 2" required>
+            <button type="submit">Filter</button>
         </form>
         
         <form action="/industries/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/industries/q3/' + this.order.value;">
-            <label>Ordenar por Patrimônio Total:</label>
+            <label>Sort by Total Net Worth:</label>
             <select name="order" required>
-                <option value="ASC">Crescente</option>
-                <option value="DESC">Decrescente</option>
+                <option value="ASC">Ascending</option>
+                <option value="DESC">Descending</option>
             </select>
-            <button type="submit">Ordenar</button>
+            <button type="submit">Sort</button>
         </form>
     </div>
     
@@ -37,9 +37,9 @@
         <table>
             <thead>
                 <tr>
-                    <th>Indústria</th>
-                    <th>Quantidade de Bilionários</th>
-                    <th>Patrimônio Total (Bilhões)</th>
+                    <th>Industry</th>
+                    <th>Number of Billionaires</th>
+                    <th>Total Net Worth (Billions)</th>
                 </tr>
             </thead>
             <tbody>
