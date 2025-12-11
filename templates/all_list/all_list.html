@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}All Billionaires{% endblock %}
+{% block title %}Todos os Bilionários{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,28 +8,28 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>📋 Complete Billionaires List</h1>
+    <h1>📋 Lista Completa de Bilionários</h1>
     
     <div class="search-forms">
         <form action="/all-list/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/all-list/q1/' + this.order.value;">
-            <label>Sort by Age:</label>
+            <label>Ordenar por Idade:</label>
             <select name="order" required>
-                <option value="ASC">Ascending</option>
-                <option value="DESC">Descending</option>
+                <option value="ASC">Crescente</option>
+                <option value="DESC">Decrescente</option>
             </select>
-            <button type="submit">Sort</button>
+            <button type="submit">Ordenar</button>
         </form>
         
         <form action="/all-list/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/all-list/q2/' + this.lastname.value;">
-            <label>Filter by Last Name:</label>
-            <input type="text" name="lastname" placeholder="e.g., Gates" required>
-            <button type="submit">Filter</button>
+            <label>Filtrar por Sobrenome:</label>
+            <input type="text" name="lastname" placeholder="ex: Gates" required>
+            <button type="submit">Filtrar</button>
         </form>
         
         <form action="/all-list/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/all-list/q3/' + this.wealth.value;">
-            <label>Minimum Wealth (Millions):</label>
-            <input type="number" name="wealth" placeholder="e.g., 100000" required>
-            <button type="submit">Filter</button>
+            <label>Patrimônio Mínimo (Milhões):</label>
+            <input type="number" name="wealth" placeholder="ex: 100000" required>
+            <button type="submit">Filtrar</button>
         </form>
     </div>
     
@@ -37,12 +37,12 @@
         <table>
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Wealth (Billions)</th>
-                    <th>Age</th>
-                    <th>Country</th>
-                    <th>Source</th>
+                    <th>Ranking</th>
+                    <th>Nome</th>
+                    <th>Patrimônio (Bilhões)</th>
+                    <th>Idade</th>
+                    <th>País</th>
+                    <th>Fonte</th>
                 </tr>
             </thead>
             <tbody>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Billionaires - Wealth ≥ ${{ min_wealth }}M{% endblock %}
+{% block title %}Bilionários - Patrimônio ≥ ${{ min_wealth }}M{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,19 +8,19 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>📋 Billionaires with Wealth ≥ ${{ min_wealth }} Million</h1>
-    <a href="/all-list" class="btn-back">← Back to All List</a>
+    <h1>📋 Bilionários com Patrimônio ≥ ${{ min_wealth }} Milhões</h1>
+    <a href="/all-list" class="btn-back">← Voltar à Lista Completa</a>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Wealth (Billions)</th>
-                    <th>Age</th>
-                    <th>Country</th>
-                    <th>Source</th>
+                    <th>Ranking</th>
+                    <th>Nome</th>
+                    <th>Patrimônio (Bilhões)</th>
+                    <th>Idade</th>
+                    <th>País</th>
+                    <th>Fonte</th>
                 </tr>
             </thead>
             <tbody>
