@@ -2,12 +2,13 @@
 import sqlite3
 import os
 
-def init_database(db_path='billionaires.db'):
+def init_database(db_path='b.db'):
     """Initialize the database with schema and sample data using recreate_database.sql."""
     
+    # Note: Skipping database removal to preserve existing data in b.db
     # Remove existing database if it exists
-    if os.path.exists(db_path):
-        os.remove(db_path)
+    # if os.path.exists(db_path):
+    #     os.remove(db_path)
     
     # Connect to database
     conn = sqlite3.connect(db_path)

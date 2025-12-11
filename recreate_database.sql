@@ -6,7 +6,7 @@
 --
 -- USAGE:
 -- 1. To recreate the database from scratch:
---    sqlite3 billionaires.db < recreate_database.sql
+--    sqlite3 b.db < recreate_database.sql
 --
 -- 2. Or use Python:
 --    python init_db.py

@@ -51,7 +51,7 @@ The `recreate_database.sql` script provides a complete, standalone way to recrea
 
 Use it with:
 ```bash
-sqlite3 billionaires.db < recreate_database.sql
+sqlite3 b.db < recreate_database.sql
 ```
 
 Or use the Python initialization script:
@@ -141,7 +141,7 @@ python init_db.py
    ```bash
    python init_db.py
    ```
-   This creates `billionaires.db` with the schema and sample data.
+   This creates `b.db` with the schema and sample data.
 
 5. **Run the application**
    ```bash
@@ -191,7 +191,7 @@ appBilionarios/
 ├── recreate_database.sql    # Complete database recreation script (normalized schema)
 ├── schema.sql               # Original database schema (for reference)
 ├── requirements.txt         # Python dependencies
-├── billionaires.db          # SQLite database (created after init, .gitignore'd)
+├── b.db                     # SQLite database (used by application)
 ├── templates/               # HTML templates organized by section
 │   ├── home/
 │   ├── top10/

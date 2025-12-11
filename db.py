@@ -3,7 +3,7 @@
 # import sqlite3
 # from flask import g
 
-# DATABASE = 'billionaires.db'
+# DATABASE = 'b.db'
 
 # def get_db():
 #     """Get database connection."""
