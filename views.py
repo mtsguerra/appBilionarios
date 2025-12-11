@@ -6,7 +6,7 @@ from app import app
 
 def get_db():
     """Create a database connection with security settings."""
-    conn = sqlite3.connect('billionaires.db')
+    conn = sqlite3.connect('b.db')
     conn.row_factory = sqlite3.Row
     # Security settings
     conn.execute("PRAGMA trusted_schema = OFF;")
@@ -23,8 +23,9 @@ def home():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship
+            comp.source, pi.countryOfCitizenship
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
         ORDER BY b.rank
@@ -43,8 +44,9 @@ def top10():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship
+            comp.source, pi.countryOfCitizenship
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
         ORDER BY b.rank
@@ -64,11 +66,12 @@ def top10_by_country(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship
+            comp.source, pi.countryOfCitizenship
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.countryOfCitizenship = ?
+        WHERE pi.countryOfCitizenship = ?
         ORDER BY b.rank
         LIMIT 10
     '''
@@ -116,11 +119,12 @@ def top10_by_age(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.age
+            comp.source, pi.countryOfCitizenship, pi.age
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.age <= ?
+        WHERE pi.age <= ?
         ORDER BY b.rank
         LIMIT 10
     '''
@@ -144,9 +148,10 @@ def subject(subject):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth, comp.source,
-            c.cityName, b.firstName, b.lastName, b.age, b.gender, b.birthDate,
-            b.countryOfCitizenship, comp.category, comp.industries
+            c.cityName, pi.firstName, pi.lastName, pi.age, pi.gender, pi.birthDate,
+            pi.countryOfCitizenship, comp.category, comp.industries
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN CITY c ON b.city = c.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
@@ -197,8 +202,9 @@ def all_list():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.age
+            comp.source, pi.countryOfCitizenship, pi.age
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
         ORDER BY b.rank
@@ -212,18 +218,21 @@ def all_list():
 @app.route('/all-list/q1/<input>')
 def all_list_by_age(input):
     """List billionaires sorted by age."""
-    # Validate and sanitize sort direction - only ASC or DESC allowed
-    order = 'ASC' if input.upper() == 'ASC' else 'DESC'
+    # Validate sort direction using whitelist dictionary
+    valid_orders = {'ASC': 'ASC', 'DESC': 'DESC', 'asc': 'ASC', 'desc': 'DESC'}
+    order = valid_orders.get(input, 'ASC')  # Default to ASC if invalid input
+    
     conn = get_db()
-    # Safe to use order variable here as it's strictly validated above
+    # Build query safely using validated order value
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.age
+            comp.source, pi.countryOfCitizenship, pi.age
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        ORDER BY b.age ''' + order
+        ORDER BY pi.age ''' + order
     cursor = conn.execute(query)
     billionaires = cursor.fetchall()
     conn.close()
@@ -238,11 +247,12 @@ def all_list_by_last_name(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.age, b.lastName
+            comp.source, pi.countryOfCitizenship, pi.age, pi.lastName
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.lastName LIKE ?
+        WHERE pi.lastName LIKE ?
         ORDER BY b.rank
     '''
     cursor = conn.execute(query, (f'%{last_name}%',))
@@ -263,8 +273,9 @@ def all_list_by_wealth(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.age
+            comp.source, pi.countryOfCitizenship, pi.age
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
         WHERE b.finalWorth >= ?
@@ -287,13 +298,15 @@ def countries():
     conn = get_db()
     query = '''
         SELECT 
-            b.countryOfCitizenship as countryName,
+            pi.countryOfCitizenship as countryName,
             COUNT(*) as billionaireCount,
             SUM(b.finalWorth) as totalWorth,
-            co.population, co.lifeExpectancy, co.gdp
+            co.population, co.lifeExpectancy, e.gdp
         FROM BILLIONARIES b
-        LEFT JOIN COUNTRY co ON b.countryOfCitizenship = co.countryName
-        GROUP BY b.countryOfCitizenship
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+        LEFT JOIN COUNTRY co ON pi.countryOfCitizenship = co.countryName
+        LEFT JOIN ECONOMICS e ON co.economics = e.id
+        GROUP BY pi.countryOfCitizenship
         ORDER BY billionaireCount DESC
     '''
     cursor = conn.execute(query)
@@ -310,11 +323,13 @@ def countries_wealth_comparison(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            b.countryOfCitizenship,
-            co.population, co.gdp
+            pi.countryOfCitizenship,
+            co.population, e.gdp
         FROM BILLIONARIES b
-        LEFT JOIN COUNTRY co ON b.countryOfCitizenship = co.countryName
-        WHERE b.countryOfCitizenship = ?
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+        LEFT JOIN COUNTRY co ON pi.countryOfCitizenship = co.countryName
+        LEFT JOIN ECONOMICS e ON co.economics = e.id
+        WHERE pi.countryOfCitizenship = ?
         ORDER BY b.rank
     '''
     cursor = conn.execute(query, (country,))
@@ -335,9 +350,10 @@ def countries_born_in(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            b.countryOfCitizenship, b.age
+            pi.countryOfCitizenship, pi.age
         FROM BILLIONARIES b
-        WHERE b.countryOfCitizenship = ?
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+        WHERE pi.countryOfCitizenship = ?
         ORDER BY b.rank
     '''
     cursor = conn.execute(query, (country,))
@@ -357,12 +373,13 @@ def countries_life_expectancy(input):
     conn = get_db()
     query = '''
         SELECT 
-            b.rank, b.personName, b.age,
-            b.countryOfCitizenship,
+            b.rank, b.personName, pi.age,
+            pi.countryOfCitizenship,
             co.lifeExpectancy
         FROM BILLIONARIES b
-        LEFT JOIN COUNTRY co ON b.countryOfCitizenship = co.countryName
-        WHERE b.countryOfCitizenship = ?
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+        LEFT JOIN COUNTRY co ON pi.countryOfCitizenship = co.countryName
+        WHERE pi.countryOfCitizenship = ?
         ORDER BY b.rank
     '''
     cursor = conn.execute(query, (country,))
@@ -405,9 +422,10 @@ def industries_specific_billionaires(input):
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship,
+            comp.source, pi.countryOfCitizenship,
             comp.category, comp.industries
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
         WHERE comp.category LIKE ?
@@ -452,10 +470,12 @@ def industries_amount(input):
 @app.route('/industries/q3/<input>')
 def industries_wealth(input):
     """Total net worth by industry sorted."""
-    # Validate and sanitize sort direction - only ASC or DESC allowed
-    order = 'ASC' if input.upper() == 'ASC' else 'DESC'
+    # Validate sort direction using whitelist dictionary
+    valid_orders = {'ASC': 'ASC', 'DESC': 'DESC', 'asc': 'ASC', 'desc': 'DESC'}
+    order = valid_orders.get(input, 'DESC')  # Default to DESC if invalid input
+    
     conn = get_db()
-    # Safe to use order variable here as it's strictly validated above
+    # Build query safely using validated order value
     query = '''
         SELECT 
             comp.category,
@@ -487,11 +507,12 @@ def bd_q1_bilionarios_eua():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship
+            comp.source, pi.countryOfCitizenship
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.countryOfCitizenship = 'United States'
+        WHERE pi.countryOfCitizenship = 'United States'
         ORDER BY b.rank
     '''
     cursor = conn.execute(query)
@@ -511,11 +532,12 @@ def bd_q3_regiao_oeste():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            c.cityName, b.countryOfCitizenship,
+            c.cityName, pi.countryOfCitizenship,
             c.residenceStateRegion
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN CITY c ON b.city = c.id
-        WHERE b.countryOfCitizenship = 'United States'
+        WHERE pi.countryOfCitizenship = 'United States'
         AND (c.residenceStateRegion LIKE '%West%' OR c.residenceStateRegion LIKE '%Northwest%')
         ORDER BY b.rank
     '''
@@ -536,11 +558,12 @@ def bd_q4_genero_feminino():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, b.gender, b.age
+            comp.source, pi.countryOfCitizenship, pi.gender, pi.age
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.gender = 'F'
+        WHERE pi.gender = 'F'
         ORDER BY b.rank
     '''
     cursor = conn.execute(query)
@@ -588,11 +611,12 @@ def bd_q7_mais_50_anos_ranking():
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
-            comp.source, b.age, b.countryOfCitizenship
+            comp.source, pi.age, pi.countryOfCitizenship
         FROM BILLIONARIES b
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.age > 50 AND b.rank >= 50
+        WHERE pi.age > 50 AND b.rank >= 50
         ORDER BY b.rank
     '''
     cursor = conn.execute(query)
@@ -640,15 +664,17 @@ def bd_q11_tax_bilionarios_pais():
     conn = get_db()
     query = '''
         SELECT 
-            b.countryOfCitizenship as countryName,
+            pi.countryOfCitizenship as countryName,
             COUNT(*) as billionaireCount,
-            co.totalTaxRate,
+            e.totalTaxRate,
             SUM(b.finalWorth) as totalWorth,
             AVG(b.finalWorth) as avgWorth
         FROM BILLIONARIES b
-        LEFT JOIN COUNTRY co ON b.countryOfCitizenship = co.countryName
-        WHERE co.totalTaxRate IS NOT NULL
-        GROUP BY b.countryOfCitizenship, co.totalTaxRate
+        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+        LEFT JOIN COUNTRY co ON pi.countryOfCitizenship = co.countryName
+        LEFT JOIN ECONOMICS e ON co.economics = e.id
+        WHERE e.totalTaxRate IS NOT NULL
+        GROUP BY pi.countryOfCitizenship, e.totalTaxRate
         ORDER BY billionaireCount DESC
     '''
     cursor = conn.execute(query)
@@ -674,7 +700,8 @@ def bd_q14_selfmade_education():
             ROUND(CAST(COUNT(CASE WHEN b.selfMade = 1 THEN 1 END) AS FLOAT) / COUNT(*) * 100, 2) as selfMadePercentage,
             AVG(b.finalWorth) as avgWorth
         FROM COUNTRY co
-        LEFT JOIN BILLIONARIES b ON co.countryName = b.countryOfCitizenship
+        LEFT JOIN PERSONAL_INFO pi ON co.countryName = pi.countryOfCitizenship
+        LEFT JOIN BILLIONARIES b ON pi.id = b.personalInfo
         WHERE co.grossTertiaryEducation IS NOT NULL AND b.id IS NOT NULL
         GROUP BY co.countryName, co.grossTertiaryEducation
         HAVING totalBillionaires > 0
