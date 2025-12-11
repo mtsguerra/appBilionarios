@@ -138,10 +138,20 @@ python init_db.py
    ```
 
 4. **Initialize the database**
+   
+   **Option A: Create b.db (recommended for development)**
+   ```bash
+   python create_b_db.py
+   ```
+   This creates `b.db` with the normalized schema and sample data using Python scripts.
+   
+   **Option B: Create billionaires.db (using SQL script)**
    ```bash
    python init_db.py
    ```
-   This creates `billionaires.db` with the schema and sample data.
+   This creates `billionaires.db` with the schema and sample data from SQL.
+   
+   **Note**: The application uses `b.db` by default. Use `create_b_db.py` for the expected database.
 
 5. **Run the application**
    ```bash
