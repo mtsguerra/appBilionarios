@@ -468,3 +468,220 @@ def industries_wealth(input):
     conn.close()
     
     return render_template('industries/industries_wealth.html', industries=industries, order=order)
+
+
+# Rotas de Perguntas do Banco de Dados
+@app.route('/perguntas-bd')
+def perguntas_bd():
+    """Página com todas as 14 perguntas do banco de dados."""
+    return render_template('perguntas_bd/perguntas_bd.html')
+
+
+@app.route('/perguntas-bd/q1')
+def bd_q1_bilionarios_eua():
+    """1. Todos bilionários dos EUA."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.rank, b.personName, b.finalWorth, b.source,
+            p.countryOfCitizenship
+        FROM BILLIONAIRE b
+        LEFT JOIN PERSONAL p ON b.rank = p.rank
+        WHERE p.countryOfCitizenship = 'United States'
+        ORDER BY b.rank
+    '''
+    cursor = conn.execute(query)
+    billionaires = cursor.fetchall()
+    conn.close()
+    
+    if not billionaires:
+        return render_template('erro.html', message='Nenhum bilionário encontrado dos EUA')
+    
+    return render_template('perguntas_bd/q1_bilionarios_eua.html', billionaires=billionaires)
+
+
+@app.route('/perguntas-bd/q3')
+def bd_q3_regiao_oeste():
+    """3. Bilionários da região oeste dos EUA."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.rank, b.personName, b.finalWorth, b.cityName,
+            p.countryOfCitizenship,
+            ci.residenceStateRegion
+        FROM BILLIONAIRE b
+        LEFT JOIN PERSONAL p ON b.rank = p.rank
+        LEFT JOIN CITY ci ON b.cityName = ci.cityName
+        WHERE p.countryOfCitizenship = 'United States'
+        AND (ci.residenceStateRegion LIKE '%West%' OR ci.residenceStateRegion LIKE '%Northwest%')
+        ORDER BY b.rank
+    '''
+    cursor = conn.execute(query)
+    billionaires = cursor.fetchall()
+    conn.close()
+    
+    if not billionaires:
+        return render_template('erro.html', message='Nenhum bilionário encontrado na região oeste dos EUA')
+    
+    return render_template('perguntas_bd/q3_regiao_oeste.html', billionaires=billionaires)
+
+
+@app.route('/perguntas-bd/q4')
+def bd_q4_genero_feminino():
+    """4. Bilionários do gênero feminino."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.rank, b.personName, b.finalWorth, b.source,
+            p.countryOfCitizenship, p.gender, p.age
+        FROM BILLIONAIRE b
+        LEFT JOIN PERSONAL p ON b.rank = p.rank
+        WHERE p.gender = 'F'
+        ORDER BY b.rank
+    '''
+    cursor = conn.execute(query)
+    billionaires = cursor.fetchall()
+    conn.close()
+    
+    if not billionaires:
+        return render_template('erro.html', message='Nenhuma bilionária do gênero feminino encontrada')
+    
+    return render_template('perguntas_bd/q4_genero_feminino.html', billionaires=billionaires)
+
+
+@app.route('/perguntas-bd/q5')
+def bd_q5_cidade_mais_bilionarios():
+    """5. Cidade com maior número de bilionários."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.cityName,
+            ci.state,
+            ci.residenceStateRegion,
+            COUNT(*) as billionaireCount,
+            SUM(b.finalWorth) as totalWorth
+        FROM BILLIONAIRE b
+        LEFT JOIN CITY ci ON b.cityName = ci.cityName
+        WHERE b.cityName IS NOT NULL
+        GROUP BY b.cityName
+        ORDER BY billionaireCount DESC, totalWorth DESC
+        LIMIT 20
+    '''
+    cursor = conn.execute(query)
+    cities = cursor.fetchall()
+    conn.close()
+    
+    if not cities:
+        return render_template('erro.html', message='Nenhuma cidade encontrada')
+    
+    return render_template('perguntas_bd/q5_cidade_mais_bilionarios.html', cities=cities)
+
+
+@app.route('/perguntas-bd/q7')
+def bd_q7_mais_50_anos_ranking():
+    """7. Bilionários com mais de 50 anos e ranking igual ou superior a 50."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.rank, b.personName, b.finalWorth, b.source,
+            p.age, p.countryOfCitizenship
+        FROM BILLIONAIRE b
+        LEFT JOIN PERSONAL p ON b.rank = p.rank
+        WHERE p.age > 50 AND b.rank >= 50
+        ORDER BY b.rank
+    '''
+    cursor = conn.execute(query)
+    billionaires = cursor.fetchall()
+    conn.close()
+    
+    if not billionaires:
+        return render_template('erro.html', message='Nenhum bilionário encontrado com esses critérios')
+    
+    return render_template('perguntas_bd/q7_mais_50_ranking.html', billionaires=billionaires)
+
+
+@app.route('/perguntas-bd/q10')
+def bd_q10_cidades_maior_patrimonio():
+    """10. Cidades com os maiores patrimônios entre os bilionários que vivem lá."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            b.cityName,
+            ci.state,
+            ci.residenceStateRegion,
+            COUNT(*) as billionaireCount,
+            SUM(b.finalWorth) as totalWorth,
+            AVG(b.finalWorth) as avgWorth
+        FROM BILLIONAIRE b
+        LEFT JOIN CITY ci ON b.cityName = ci.cityName
+        WHERE b.cityName IS NOT NULL
+        GROUP BY b.cityName
+        ORDER BY totalWorth DESC
+        LIMIT 20
+    '''
+    cursor = conn.execute(query)
+    cities = cursor.fetchall()
+    conn.close()
+    
+    if not cities:
+        return render_template('erro.html', message='Nenhuma cidade encontrada')
+    
+    return render_template('perguntas_bd/q10_cidades_patrimonio.html', cities=cities)
+
+
+@app.route('/perguntas-bd/q11')
+def bd_q11_tax_bilionarios_pais():
+    """11. Relação de total tax e seus respectivos números de bilionários por país."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            p.countryOfCitizenship as countryName,
+            COUNT(*) as billionaireCount,
+            ce.totalTaxRate,
+            SUM(b.finalWorth) as totalWorth,
+            AVG(b.finalWorth) as avgWorth
+        FROM PERSONAL p
+        JOIN BILLIONAIRE b ON p.rank = b.rank
+        LEFT JOIN COUNTRYECONOMY ce ON p.countryOfCitizenship = ce.countryName
+        WHERE ce.totalTaxRate IS NOT NULL
+        GROUP BY p.countryOfCitizenship, ce.totalTaxRate
+        ORDER BY billionaireCount DESC
+    '''
+    cursor = conn.execute(query)
+    countries = cursor.fetchall()
+    conn.close()
+    
+    if not countries:
+        return render_template('erro.html', message='Nenhum dado encontrado')
+    
+    return render_template('perguntas_bd/q11_tax_bilionarios.html', countries=countries)
+
+
+@app.route('/perguntas-bd/q14')
+def bd_q14_selfmade_education():
+    """14. Relação entre selfmade bilionários e gross tertiary education."""
+    conn = get_db()
+    query = '''
+        SELECT 
+            co.countryName,
+            co.grossTertiaryEducation,
+            COUNT(CASE WHEN b.selfMade = 1 THEN 1 END) as selfMadeCount,
+            COUNT(*) as totalBillionaires,
+            ROUND(CAST(COUNT(CASE WHEN b.selfMade = 1 THEN 1 END) AS FLOAT) / COUNT(*) * 100, 2) as selfMadePercentage,
+            AVG(b.finalWorth) as avgWorth
+        FROM COUNTRY co
+        LEFT JOIN PERSONAL p ON co.countryName = p.countryOfCitizenship
+        LEFT JOIN BILLIONAIRE b ON p.rank = b.rank
+        WHERE co.grossTertiaryEducation IS NOT NULL AND b.rank IS NOT NULL
+        GROUP BY co.countryName, co.grossTertiaryEducation
+        HAVING totalBillionaires > 0
+        ORDER BY co.grossTertiaryEducation DESC
+    '''
+    cursor = conn.execute(query)
+    countries = cursor.fetchall()
+    conn.close()
+    
+    if not countries:
+        return render_template('erro.html', message='Nenhum dado encontrado')
+    
+    return render_template('perguntas_bd/q14_selfmade_education.html', countries=countries)
