@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Countries - Billionaires{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='countries.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="countries-container">
+    <h1>🌍 Billionaires by Country</h1>
+    
+    <div class="search-forms">
+        <form action="/countries/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q1/' + this.country.value;">
+            <label>Wealth vs GDP Comparison:</label>
+            <input type="text" name="country" placeholder="e.g., United States" required>
+            <button type="submit">Compare</button>
+        </form>
+        
+        <form action="/countries/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q2/' + this.country.value;">
+            <label>Billionaires Born In:</label>
+            <input type="text" name="country" placeholder="e.g., France" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <form action="/countries/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q3/' + this.country.value;">
+            <label>Life Expectancy Remaining:</label>
+            <input type="text" name="country" placeholder="e.g., India" required>
+            <button type="submit">Calculate</button>
+        </form>
+    </div>
+    
+    <div class="countries-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Billionaire Count</th>
+                    <th>Total Wealth (Billions)</th>
+                    <th>Population</th>
+                    <th>GDP (Trillions)</th>
+                    <th>Life Expectancy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for country in countries %}
+                <tr>
+                    <td class="country-name">{{ country.countryName }}</td>
+                    <td>{{ country.billionaireCount }}</td>
+                    <td class="wealth">${{ "%.1f"|format(country.totalWorth / 1000) }}B</td>
+                    <td>{{ "{:,}".format(country.population) if country.population else 'N/A' }}</td>
+                    <td>${{ "%.2f"|format(country.gdp / 1000000000000) if country.gdp else 'N/A' }}T</td>
+                    <td>{{ "%.1f"|format(country.lifeExpectancy) if country.lifeExpectancy else 'N/A' }} years</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.search-forms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.search-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.search-form input {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.search-form button {
+    padding: 10px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
+}
+
+.search-form button:hover {
+    background: #5568d3;
+}
+</style>
+{% endblock %}

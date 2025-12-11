@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Top 10 Billionaires{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <h1>🌟 Top 10 Richest Billionaires</h1>
+    <p class="subtitle">Discover the wealthiest people in the world</p>
+    
+    <div class="billionaires-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Wealth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
+                    <th>Profile</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for billionaire in billionaires %}
+                <tr>
+                    <td class="rank">{{ billionaire.rank }}</td>
+                    <td class="name">{{ billionaire.personName }}</td>
+                    <td class="wealth">${{ "%.1f"|format(billionaire.finalWorth / 1000) }}B</td>
+                    <td>{{ billionaire.countryOfCitizenship or 'N/A' }}</td>
+                    <td>{{ billionaire.source }}</td>
+                    <td><a href="/subject/{{ billionaire.personName }}" class="btn-view">View Profile</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
