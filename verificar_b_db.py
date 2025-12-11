@@ -32,7 +32,7 @@ def verificar_b_db():
         print(f"❌ ERRO ao conectar: {e}")
         return False
     
-    # Tabelas esperadas
+    # Tabelas esperadas - whitelist de nomes válidos
     expected_tables = [
         'BILLIONARIES',
         'PERSONAL_INFO',
@@ -42,6 +42,10 @@ def verificar_b_db():
         'COMPANY',
         'WORKS'
     ]
+    
+    def is_valid_table_name(name):
+        """Valida nome de tabela contra whitelist para prevenir SQL injection."""
+        return name in expected_tables and name.isalnum() or '_' in name
     
     print("\n" + "-"*70)
     print("VERIFICANDO TABELAS")
@@ -81,6 +85,11 @@ def verificar_b_db():
     
     all_columns_ok = True
     for table, expected_cols in checks:
+        # Validação adicional: verificar se o nome da tabela está na whitelist
+        if not is_valid_table_name(table):
+            print(f"❌ Nome de tabela inválido: {table}")
+            all_columns_ok = False
+            continue
         cursor.execute(f"PRAGMA table_info({table});")
         existing_cols = [row[1] for row in cursor.fetchall()]
         
@@ -104,6 +113,10 @@ def verificar_b_db():
     # Conta registros
     tables_with_data = []
     for table in expected_tables:
+        # Validação: verificar se o nome da tabela está na whitelist
+        if not is_valid_table_name(table):
+            print(f"❌ Nome de tabela inválido: {table}")
+            continue
         cursor.execute(f"SELECT COUNT(*) FROM {table};")
         count = cursor.fetchone()[0]
         tables_with_data.append((table, count))

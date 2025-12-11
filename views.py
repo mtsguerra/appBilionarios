@@ -218,10 +218,12 @@ def all_list():
 @app.route('/all-list/q1/<input>')
 def all_list_by_age(input):
     """List billionaires sorted by age."""
-    # Validate and sanitize sort direction - only ASC or DESC allowed
-    order = 'ASC' if input.upper() == 'ASC' else 'DESC'
+    # Validate sort direction using whitelist dictionary
+    valid_orders = {'ASC': 'ASC', 'DESC': 'DESC', 'asc': 'ASC', 'desc': 'DESC'}
+    order = valid_orders.get(input, 'ASC')  # Default to ASC if invalid input
+    
     conn = get_db()
-    # Safe to use order variable here as it's strictly validated above
+    # Build query safely using validated order value
     query = '''
         SELECT 
             b.rank, b.personName, b.finalWorth,
@@ -468,10 +470,12 @@ def industries_amount(input):
 @app.route('/industries/q3/<input>')
 def industries_wealth(input):
     """Total net worth by industry sorted."""
-    # Validate and sanitize sort direction - only ASC or DESC allowed
-    order = 'ASC' if input.upper() == 'ASC' else 'DESC'
+    # Validate sort direction using whitelist dictionary
+    valid_orders = {'ASC': 'ASC', 'DESC': 'DESC', 'asc': 'ASC', 'desc': 'DESC'}
+    order = valid_orders.get(input, 'DESC')  # Default to DESC if invalid input
+    
     conn = get_db()
-    # Safe to use order variable here as it's strictly validated above
+    # Build query safely using validated order value
     query = '''
         SELECT 
             comp.category,
