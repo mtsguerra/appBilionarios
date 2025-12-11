@@ -145,7 +145,7 @@ def subject(subject):
         SELECT 
             b.rank, b.personName, b.finalWorth, comp.source,
             c.cityName, b.firstName, b.lastName, b.age, b.gender, b.birthDate,
-            b.countryOfCitizenship, comp.category, comp.industr as industries
+            b.countryOfCitizenship, comp.category, comp.industries
         FROM BILLIONARIES b
         LEFT JOIN CITY c ON b.city = c.id
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
@@ -311,7 +311,7 @@ def countries_wealth_comparison(input):
         SELECT 
             b.rank, b.personName, b.finalWorth,
             b.countryOfCitizenship,
-            co.population, co.gdp, co.gdp as gdp_value
+            co.population, co.gdp
         FROM BILLIONARIES b
         LEFT JOIN COUNTRY co ON b.countryOfCitizenship = co.countryName
         WHERE b.countryOfCitizenship = ?
@@ -406,7 +406,7 @@ def industries_specific_billionaires(input):
         SELECT 
             b.rank, b.personName, b.finalWorth,
             comp.source, b.countryOfCitizenship,
-            comp.category, comp.industr as industries
+            comp.category, comp.industries
         FROM BILLIONARIES b
         LEFT JOIN WORKS w ON b.id = w.billionaire_id
         LEFT JOIN COMPANY comp ON w.company_id = comp.id

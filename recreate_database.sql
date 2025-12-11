@@ -83,7 +83,7 @@ CREATE TABLE COMPANY (
     source VARCHAR(40),
     organization VARCHAR(60),
     category VARCHAR(40),
-    industr VARCHAR(40)
+    industries VARCHAR(40)
 );
 
 -- ----------------------------------------------------------------------------
@@ -186,7 +186,7 @@ INSERT INTO CITY (id, cityName, state, residenceStateRegion, country) VALUES
 -- ----------------------------------------------------------------------------
 -- Insert COMPANY data
 -- ----------------------------------------------------------------------------
-INSERT INTO COMPANY (id, source, organization, category, industr) VALUES
+INSERT INTO COMPANY (id, source, organization, category, industries) VALUES
 (1, 'Amazon', 'Amazon.com Inc.', 'Technology', 'E-commerce, Cloud Computing'),
 (2, 'Microsoft', 'Microsoft Corporation', 'Technology', 'Software, Cloud Computing'),
 (3, 'Tesla', 'Tesla Inc.', 'Automotive', 'Electric Vehicles, Clean Energy'),
