@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billionaires Database - Explorer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>💰 Billionaires Database Explorer</h1>
+            <p>Explore and visualize global billionaire data</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Search Section -->
+        <section class="search-section">
+            <h2>Search Billionaires</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by name...">
+                <button id="searchBtn">Search</button>
+            </div>
+            <div id="searchResults" class="results"></div>
+        </section>
+
+        <!-- Statistics Overview -->
+        <section class="stats-section">
+            <h2>Statistics Overview</h2>
+            <div id="statsContainer" class="stats-grid">
+                <div class="stat-card">
+                    <h3>Loading...</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <h2>Filter Billionaires</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="countryFilter">Country:</label>
+                    <select id="countryFilter">
+                        <option value="">All Countries</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="genderFilter">Gender:</label>
+                    <select id="genderFilter">
+                        <option value="">All</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="selfMadeFilter">Self-Made:</label>
+                    <select id="selfMadeFilter">
+                        <option value="">All</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <button id="applyFilters">Apply Filters</button>
+                <button id="clearFilters">Clear</button>
+            </div>
+        </section>
+
+        <!-- Billionaires List -->
+        <section class="list-section">
+            <h2>Billionaires List</h2>
+            <div id="billionairesList" class="billionaires-list">
+                <p>Loading...</p>
+            </div>
+        </section>
+
+        <!-- Countries Section -->
+        <section class="countries-section">
+            <h2>Billionaires by Country</h2>
+            <div id="countriesList" class="countries-list">
+                <p>Loading...</p>
+            </div>
+        </section>
+
+        <!-- Industries Section -->
+        <section class="industries-section">
+            <h2>Billionaires by Industry</h2>
+            <div id="industriesList" class="industries-list">
+                <p>Loading...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Billionaires Database. Data for educational purposes.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
