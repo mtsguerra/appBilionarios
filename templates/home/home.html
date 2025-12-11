@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Top 10 Billionaires{% endblock %}
+{% block title %}Início - Top 10 Bilionários{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
@@ -8,19 +8,19 @@
 
 {% block content %}
 <div class="home-container">
-    <h1>🌟 Top 10 Richest Billionaires</h1>
-    <p class="subtitle">Discover the wealthiest people in the world</p>
+    <h1>🌟 Top 10 Bilionários Mais Ricos</h1>
+    <p class="subtitle">Descubra as pessoas mais ricas do mundo</p>
     
     <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Wealth (Billions)</th>
-                    <th>Country</th>
-                    <th>Source</th>
-                    <th>Profile</th>
+                    <th>Ranking</th>
+                    <th>Nome</th>
+                    <th>Patrimônio (Bilhões)</th>
+                    <th>País</th>
+                    <th>Fonte</th>
+                    <th>Perfil</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +31,7 @@
                     <td class="wealth">${{ "%.1f"|format(billionaire.finalWorth / 1000) }}B</td>
                     <td>{{ billionaire.countryOfCitizenship or 'N/A' }}</td>
                     <td>{{ billionaire.source }}</td>
-                    <td><a href="/subject/{{ billionaire.personName }}" class="btn-view">View Profile</a></td>
+                    <td><a href="/subject/{{ billionaire.personName }}" class="btn-view">Ver Perfil</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

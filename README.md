@@ -1,15 +1,18 @@
 # appBilionarios - Billionaire Database Application
 
+> 🇧🇷 [Versão em Português (Brasil)](README.pt-BR.md)
+
 A complete Flask web application for querying and visualizing global billionaire data.
 
 ## Features
 
 - **Comprehensive Database**: Six interconnected tables with billionaire information
-- **RESTful API**: 11+ endpoints for data queries and statistics
+- **14 SQL Queries**: RESTful endpoints for data queries and statistics
 - **Interactive Web Interface**: Search, filter, and explore billionaire data
 - **Statistics Dashboard**: Overview of global wealth distribution
 - **Multi-dimensional Filtering**: By country, gender, self-made status, and more
 - **Responsive Design**: Works on desktop and mobile devices
+- **Portuguese Interface**: Full application translated to PT-BR
 
 ## Database Structure
 
@@ -29,22 +32,58 @@ A complete Flask web application for querying and visualizing global billionaire
 - PERSONAL → COUNTRY (N:1, via countryOfCitizenship)
 - COUNTRY ←→ COUNTRYECONOMY (1:1, via countryName)
 
-## API Endpoints
+## The 14 Database Questions
 
-### Core Endpoints
+### Database Questions Section (`/perguntas-bd`)
+
+1. **Q1: USA Billionaires** - All billionaires from the United States
+2. **Q2: Top 10 by Country** - Top 10 billionaires filtered by country (available at `/top10`)
+3. **Q3: Western USA Region** - Billionaires from the western United States region
+4. **Q4: Female Gender** - All female billionaires
+5. **Q5: Cities with Most Billionaires** - City with the highest number of billionaires
+6. **Q6: Sort by Age** - Billionaires sorted by age (available at `/all-list`)
+7. **Q7: Age > 50 and Rank ≥ 50** - Billionaires over 50 years old and rank ≥ 50
+8. **Q8: Filter by Last Name** - Search billionaires by last name (available at `/all-list`)
+9. **Q9: Filter by Wealth** - Billionaires with wealth above X millions (available at `/all-list`)
+10. **Q10: Cities by Wealth** - Cities with highest total wealth
+11. **Q11: Tax Rate by Country** - Relationship between tax rate and billionaires by country
+12. **Q12: Wealth vs GDP** - Comparison of wealth vs GDP (available at `/countries`)
+13. **Q13: Life Expectancy** - Remaining life expectancy by country (available at `/countries`)
+14. **Q14: Selfmade vs Education** - Relationship between selfmade billionaires and tertiary education
+
+## Application Endpoints
+
+### Main Endpoints
 - `GET /` - Homepage with interactive UI
-- `GET /api/billionaires` - List all billionaires with filters
-  - Query params: `limit`, `offset`, `selfMade`, `minWorth`, `maxWorth`, `country`, `gender`
-- `GET /api/billionaire/<rank>` - Get detailed billionaire information
-- `GET /api/search?q=<query>` - Search billionaires by name
+- `GET /top10` - Top 10 billionaires with filters
+- `GET /all-list` - Complete list of billionaires
+- `GET /countries` - Countries with billionaire statistics
+- `GET /industries` - Industries with wealth statistics
+- `GET /perguntas-bd` - Page with all 14 database questions
 
-### Statistics Endpoints
-- `GET /api/stats` - Overall statistics and distributions
-- `GET /api/countries` - Countries with billionaire statistics
-- `GET /api/cities` - Cities with billionaire counts
-- `GET /api/industries` - Industries with wealth statistics
-- `GET /api/companies` - Companies associated with billionaires
-- `GET /api/age-distribution` - Age group distribution
+### Question Endpoints
+- `GET /perguntas-bd/q1` - USA billionaires
+- `GET /perguntas-bd/q3` - Western USA region
+- `GET /perguntas-bd/q4` - Female gender
+- `GET /perguntas-bd/q5` - Cities with most billionaires
+- `GET /perguntas-bd/q7` - Age > 50 and rank ≥ 50
+- `GET /perguntas-bd/q10` - Cities by wealth
+- `GET /perguntas-bd/q11` - Tax rate by country
+- `GET /perguntas-bd/q14` - Selfmade vs education
+
+### Filter Endpoints
+- `GET /top10/q1/<country>` - Top 10 by country
+- `GET /top10/q2/<industry>` - Top 10 by industry
+- `GET /top10/q3/<age>` - Top 10 by max age
+- `GET /all-list/q1/<order>` - Sort by age (ASC/DESC)
+- `GET /all-list/q2/<lastname>` - Filter by last name
+- `GET /all-list/q3/<wealth>` - Filter by minimum wealth
+- `GET /countries/q1/<country>` - Wealth vs GDP comparison
+- `GET /countries/q2/<country>` - Billionaires born in country
+- `GET /countries/q3/<country>` - Remaining life expectancy
+- `GET /industries/q1/<industry>` - Billionaires in specific industry
+- `GET /industries/q2/<count>` - Industries with more than X billionaires
+- `GET /industries/q3/<order>` - Sort by total wealth
 
 ## Installation
 
@@ -87,36 +126,31 @@ A complete Flask web application for querying and visualizing global billionaire
 
 ### Web Interface
 1. Open your browser to `http://localhost:5000`
-2. Use the search bar to find specific billionaires
-3. Apply filters to narrow down results
-4. Click on any billionaire card to view detailed information
-5. Explore statistics, countries, and industries sections
+2. Navigate through sections:
+   - **Home**: Top 10 richest billionaires
+   - **Top 10**: Filters by country, industry, and age
+   - **All List**: All billionaires with sorting and filtering options
+   - **Countries**: Statistics by country
+   - **Industries**: Statistics by industry
+   - **Database Questions**: All 14 database queries
+3. Click on any name to view detailed billionaire profile
+4. Use search forms to apply custom filters
 
-### API Usage Examples
+### Usage Examples
 
-**Get all billionaires:**
-```bash
-curl http://localhost:5000/api/billionaires
+**View all USA billionaires:**
+```
+http://localhost:5000/perguntas-bd/q1
 ```
 
-**Search for a billionaire:**
-```bash
-curl http://localhost:5000/api/search?q=Bezos
+**View billionaires from western USA region:**
+```
+http://localhost:5000/perguntas-bd/q3
 ```
 
-**Get billionaires by country:**
-```bash
-curl http://localhost:5000/api/billionaires?country=United%20States
+**View relationship between selfmade and education:**
 ```
-
-**Get overall statistics:**
-```bash
-curl http://localhost:5000/api/stats
-```
-
-**Get specific billionaire details:**
-```bash
-curl http://localhost:5000/api/billionaire/1
+http://localhost:5000/perguntas-bd/q14
 ```
 
 ## Project Structure

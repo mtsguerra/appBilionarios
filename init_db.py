@@ -1,26 +1,26 @@
-"""Database initialization script for Billionaire application."""
+"""Script de inicialização do banco de dados para aplicação de Bilionários."""
 import sqlite3
 import os
 
 def init_database(db_path='billionaires.db'):
-    """Initialize the database with schema and sample data."""
+    """Inicializar o banco de dados com schema e dados de exemplo."""
     
-    # Remove existing database if it exists
+    # Remover banco existente se existir
     if os.path.exists(db_path):
         os.remove(db_path)
     
-    # Connect to database
+    # Conectar ao banco de dados
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
-    # Read and execute schema
+    # Ler e executar schema
     with open('schema.sql', 'r') as f:
         schema = f.read()
         cursor.executescript(schema)
     
-    # Insert sample data
+    # Inserir dados de exemplo
     
-    # Sample CITY data
+    # Dados de exemplo de CITY
     cities = [
         ('New York', 'New York', 'Northeast'),
         ('Paris', 'Ile-de-France', 'Europe'),
@@ -33,7 +33,7 @@ def init_database(db_path='billionaires.db'):
     ]
     cursor.executemany('INSERT INTO CITY (cityName, state, residenceStateRegion) VALUES (?, ?, ?)', cities)
     
-    # Sample COUNTRY data
+    # Dados de exemplo de COUNTRY
     countries = [
         ('United States', 78.9, 88.2, 101.5, 331002651, 37.09024, -95.712891),
         ('France', 82.7, 65.9, 102.3, 65273511, 46.227638, 2.213749),
@@ -47,7 +47,7 @@ def init_database(db_path='billionaires.db'):
         countries
     )
     
-    # Sample COUNTRYECONOMY data
+    # Dados de exemplo de COUNTRYECONOMY
     economies = [
         ('United States', 258.811, 4.7, 25.6, 36.6, 21427700000000),
         ('France', 110.0, 1.1, 46.2, 60.7, 2715518000000),
@@ -61,7 +61,7 @@ def init_database(db_path='billionaires.db'):
         economies
     )
     
-    # Sample COMPANY data
+    # Dados de exemplo de COMPANY
     companies = [
         ('Amazon', 'Amazon.com Inc.', 'Technology', 'E-commerce, Cloud Computing'),
         ('Microsoft', 'Microsoft Corporation', 'Technology', 'Software, Cloud Computing'),
@@ -77,7 +77,7 @@ def init_database(db_path='billionaires.db'):
         companies
     )
     
-    # Sample BILLIONAIRE data
+    # Dados de exemplo de BILLIONAIRE
     billionaires = [
         (1, 'Jeff Bezos', 1, 'D', 'Seattle', 'Amazon', 177000.0, 'CEO'),
         (2, 'Elon Musk', 1, 'D', 'Seattle', 'Tesla', 151000.0, 'CEO'),
@@ -93,7 +93,7 @@ def init_database(db_path='billionaires.db'):
         billionaires
     )
     
-    # Sample PERSONAL data
+    # Dados de exemplo de PERSONAL
     personals = [
         (1, 'Jeff', 'Bezos', '1964-01-12', 12, 1, 1964, 57, 'M', 'United States'),
         (2, 'Elon', 'Musk', '1971-06-28', 28, 6, 1971, 50, 'M', 'United States'),
@@ -112,7 +112,7 @@ def init_database(db_path='billionaires.db'):
     conn.commit()
     conn.close()
     
-    print(f"Database '{db_path}' initialized successfully with sample data!")
+    print(f"Banco de dados '{db_path}' inicializado com sucesso com dados de exemplo!")
 
 if __name__ == '__main__':
     init_database()

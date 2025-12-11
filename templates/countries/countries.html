@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Countries - Billionaires{% endblock %}
+{% block title %}Países - Bilionários{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='countries.css') }}">
@@ -8,25 +8,25 @@
 
 {% block content %}
 <div class="countries-container">
-    <h1>🌍 Billionaires by Country</h1>
+    <h1>🌍 Bilionários por País</h1>
     
     <div class="search-forms">
         <form action="/countries/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q1/' + this.country.value;">
-            <label>Wealth vs GDP Comparison:</label>
-            <input type="text" name="country" placeholder="e.g., United States" required>
-            <button type="submit">Compare</button>
+            <label>Comparação Patrimônio vs PIB:</label>
+            <input type="text" name="country" placeholder="ex: Estados Unidos" required>
+            <button type="submit">Comparar</button>
         </form>
         
         <form action="/countries/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q2/' + this.country.value;">
-            <label>Billionaires Born In:</label>
-            <input type="text" name="country" placeholder="e.g., France" required>
-            <button type="submit">Search</button>
+            <label>Bilionários Nascidos em:</label>
+            <input type="text" name="country" placeholder="ex: França" required>
+            <button type="submit">Buscar</button>
         </form>
         
         <form action="/countries/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/countries/q3/' + this.country.value;">
-            <label>Life Expectancy Remaining:</label>
-            <input type="text" name="country" placeholder="e.g., India" required>
-            <button type="submit">Calculate</button>
+            <label>Expectativa de Vida Restante:</label>
+            <input type="text" name="country" placeholder="ex: Índia" required>
+            <button type="submit">Calcular</button>
         </form>
     </div>
     
@@ -34,12 +34,12 @@
         <table>
             <thead>
                 <tr>
-                    <th>Country</th>
-                    <th>Billionaire Count</th>
-                    <th>Total Wealth (Billions)</th>
-                    <th>Population</th>
-                    <th>GDP (Trillions)</th>
-                    <th>Life Expectancy</th>
+                    <th>País</th>
+                    <th>Quantidade de Bilionários</th>
+                    <th>Patrimônio Total (Bilhões)</th>
+                    <th>População</th>
+                    <th>PIB (Trilhões)</th>
+                    <th>Expectativa de Vida</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,7 +50,7 @@
                     <td class="wealth">${{ "%.1f"|format(country.totalWorth / 1000) }}B</td>
                     <td>{{ "{:,}".format(country.population) if country.population else 'N/A' }}</td>
                     <td>${{ "%.2f"|format(country.gdp / 1000000000000) if country.gdp else 'N/A' }}T</td>
-                    <td>{{ "%.1f"|format(country.lifeExpectancy) if country.lifeExpectancy else 'N/A' }} years</td>
+                    <td>{{ "%.1f"|format(country.lifeExpectancy) if country.lifeExpectancy else 'N/A' }} anos</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Perguntas do Banco de Dados{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <h1>📊 Perguntas do Banco de Dados</h1>
+    <p class="subtitle">Explore as 14 consultas disponíveis no banco de dados de bilionários</p>
+    
+    <div class="questions-grid">
+        <div class="question-card implemented">
+            <h3>✅ Q1: Bilionários dos EUA</h3>
+            <p>Todos os bilionários dos Estados Unidos</p>
+            <a href="/perguntas-bd/q1" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q2: Top 10 por País</h3>
+            <p>Top 10 bilionários filtrados por país</p>
+            <a href="/top10" class="btn-query">Ver em Top 10</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q3: Região Oeste dos EUA</h3>
+            <p>Bilionários da região oeste dos Estados Unidos</p>
+            <a href="/perguntas-bd/q3" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q4: Gênero Feminino</h3>
+            <p>Todas as bilionárias do gênero feminino</p>
+            <a href="/perguntas-bd/q4" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q5: Cidades com Mais Bilionários</h3>
+            <p>Cidade com maior número de bilionários</p>
+            <a href="/perguntas-bd/q5" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q6: Ordenar por Idade</h3>
+            <p>Bilionários ordenados por idade (crescente/decrescente)</p>
+            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q7: Idade > 50 e Rank ≥ 50</h3>
+            <p>Bilionários com mais de 50 anos e ranking ≥ 50</p>
+            <a href="/perguntas-bd/q7" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q8: Filtrar por Sobrenome</h3>
+            <p>Buscar bilionários por sobrenome</p>
+            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q9: Filtrar por Patrimônio Mínimo</h3>
+            <p>Bilionários com patrimônio acima de X milhões</p>
+            <a href="/all-list" class="btn-query">Ver em Lista Completa</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q10: Cidades por Patrimônio</h3>
+            <p>Cidades com maiores patrimônios totais</p>
+            <a href="/perguntas-bd/q10" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q11: Taxa de Imposto por País</h3>
+            <p>Relação entre taxa total de imposto e bilionários por país</p>
+            <a href="/perguntas-bd/q11" class="btn-query">Ver Resultados</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q12: Comparação Patrimônio vs PIB</h3>
+            <p>Comparação de patrimônio dos bilionários vs PIB do país</p>
+            <a href="/countries" class="btn-query">Ver em Países</a>
+        </div>
+        
+        <div class="question-card existing">
+            <h3>✅ Q13: Expectativa de Vida</h3>
+            <p>Expectativa de vida restante dos bilionários por país</p>
+            <a href="/countries" class="btn-query">Ver em Países</a>
+        </div>
+        
+        <div class="question-card implemented">
+            <h3>✅ Q14: Selfmade vs Educação</h3>
+            <p>Relação entre bilionários selfmade e educação terciária</p>
+            <a href="/perguntas-bd/q14" class="btn-query">Ver Resultados</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.question-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 5px solid #667eea;
+}
+
+.question-card.implemented {
+    border-left-color: #27ae60;
+}
+
+.question-card.existing {
+    border-left-color: #3498db;
+}
+
+.question-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.question-card h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.question-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.btn-query {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.btn-query:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}

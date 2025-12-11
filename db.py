@@ -1,4 +1,4 @@
-"""Database helper functions for the Billionaire application."""
+"""Funções auxiliares de banco de dados para a aplicação de Bilionários."""
 
 # import sqlite3
 # from flask import g
@@ -6,7 +6,7 @@
 # DATABASE = 'billionaires.db'
 
 # def get_db():
-#     """Get database connection."""
+#     """Obter conexão com banco de dados."""
 #     db = getattr(g, '_database', None)
 #     if db is None:
 #         db = g._database = sqlite3.connect(DATABASE)
@@ -14,13 +14,13 @@
 #     return db
 
 # def close_connection(exception):
-#     """Close database connection."""
+#     """Fechar conexão com banco de dados."""
 #     db = getattr(g, '_database', None)
 #     if db is not None:
 #         db.close()
 
 # def query_db(query, args=(), one=False):
-#     """Query the database."""
+#     """Consultar o banco de dados."""
 #     cur = get_db().execute(query, args)
 #     rv = cur.fetchall()
 #     cur.close()

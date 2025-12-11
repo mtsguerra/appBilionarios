@@ -1,28 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}{{ industry }} - Bilionários{% endblock %}
+{% block title %}Q7 - Bilionários com Idade > 50 e Rank ≥ 50{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='industries.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="industries-container">
-    <h1>🏭 Bilionários em {{ industry }}</h1>
-    <a href="/industries" class="btn-back">← Voltar às Indústrias</a>
+<div class="home-container">
+    <h1>👴 Q7: Bilionários com Mais de 50 Anos e Ranking ≥ 50</h1>
+    <a href="/perguntas-bd" class="btn-back">← Voltar às Perguntas</a>
     
     <p class="subtitle">Total: {{ billionaires|length }} bilionários</p>
     
-    <div class="industries-table">
+    <div class="billionaires-table">
         <table>
             <thead>
                 <tr>
                     <th>Ranking</th>
                     <th>Nome</th>
+                    <th>Idade</th>
                     <th>Patrimônio (Bilhões)</th>
                     <th>País</th>
                     <th>Fonte</th>
-                    <th>Indústrias</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,10 +32,10 @@
                     <td class="name">
                         <a href="/subject/{{ billionaire.personName }}">{{ billionaire.personName }}</a>
                     </td>
+                    <td>{{ billionaire.age }}</td>
                     <td class="wealth">${{ "%.1f"|format(billionaire.finalWorth / 1000) }}B</td>
                     <td>{{ billionaire.countryOfCitizenship or 'N/A' }}</td>
                     <td>{{ billionaire.source }}</td>
-                    <td>{{ billionaire.industries or 'N/A' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
