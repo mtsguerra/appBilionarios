@@ -1,5 +1,6 @@
 """Views for the Billionaires web application."""
 import sqlite3
+from contextlib import closing
 from flask import render_template
 from app import app
 
@@ -19,123 +20,158 @@ def get_db():
 @app.route('/')
 def home():
     """Home page with top 10 billionaires."""
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        ORDER BY b.rank
-        LIMIT 10
-    '''
-    cursor = conn.execute(query)
-    billionaires = cursor.fetchall()
-    conn.close()
-    return render_template('home/home.html', billionaires=billionaires)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                ORDER BY b.rank
+                LIMIT 10
+            '''
+            cursor = conn.execute(query)
+            billionaires = cursor.fetchall()
+        return render_template('home/home.html', billionaires=billionaires)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in home route: {e}')
+        return render_template('erro.html', message='Database error occurred while loading the home page.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in home route: {e}')
+        return render_template('erro.html', message='An unexpected error occurred while loading the home page.')
 
 
 @app.route('/top10')
 def top10():
     """Top 10 billionaires page."""
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        ORDER BY b.rank
-        LIMIT 10
-    '''
-    cursor = conn.execute(query)
-    billionaires = cursor.fetchall()
-    conn.close()
-    return render_template('top10/top10.html', billionaires=billionaires)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                ORDER BY b.rank
+                LIMIT 10
+            '''
+            cursor = conn.execute(query)
+            billionaires = cursor.fetchall()
+        return render_template('top10/top10.html', billionaires=billionaires)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in top10: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in top10: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 @app.route('/top10/q1/<input>')
 def top10_by_country(input):
     """Top 10 billionaires by country."""
-    country = input.capitalize()
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE pi.countryOfCitizenship = ?
-        ORDER BY b.rank
-        LIMIT 10
-    '''
-    cursor = conn.execute(query, (country,))
-    billionaires = cursor.fetchall()
-    conn.close()
-    
-    if not billionaires:
-        return render_template('erro.html', message=f'No billionaires found for country: {country}')
-    
-    return render_template('top10/top10-queries.html', billionaires=billionaires, country=country)
+    try:
+        country = input.capitalize()
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                WHERE pi.countryOfCitizenship = ?
+                ORDER BY b.rank
+                LIMIT 10
+            '''
+            cursor = conn.execute(query, (country,))
+            billionaires = cursor.fetchall()
+        
+        if not billionaires:
+            return render_template('erro.html', message=f'No billionaires found for country: {country}')
+        
+        return render_template('top10/top10-queries.html', billionaires=billionaires, country=country)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in top10_by_country: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in top10_by_country: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 @app.route('/top10/q2/<input>')
 def top10_by_industry(input):
     """Top 10 billionaires by industry."""
-    industry = input.capitalize()
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, b.countryOfCitizenship, comp.category
-        FROM BILLIONARIES b
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE comp.category LIKE ?
-        ORDER BY b.rank
-        LIMIT 10
-    '''
-    cursor = conn.execute(query, (f'%{industry}%',))
-    billionaires = cursor.fetchall()
-    conn.close()
-    
-    if not billionaires:
-        return render_template('erro.html', message=f'No billionaires found for industry: {industry}')
-    
-    return render_template('top10/top10-industry.html', billionaires=billionaires, industry=industry)
+    try:
+        industry = input.capitalize()
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship, comp.category
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                WHERE comp.category LIKE ?
+                ORDER BY b.rank
+                LIMIT 10
+            '''
+            cursor = conn.execute(query, (f'%{industry}%',))
+            billionaires = cursor.fetchall()
+        
+        if not billionaires:
+            return render_template('erro.html', message=f'No billionaires found for industry: {industry}')
+        
+        return render_template('top10/top10-industry.html', billionaires=billionaires, industry=industry)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in top10_by_industry: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in top10_by_industry: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 @app.route('/top10/q3/<input>')
 def top10_by_age(input):
     """Top 10 billionaires by age group."""
-    age = input
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship, pi.age
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE pi.age <= ?
-        ORDER BY b.rank
-        LIMIT 10
-    '''
-    cursor = conn.execute(query, (age,))
-    billionaires = cursor.fetchall()
-    conn.close()
+    try:
+        age = int(input)
+    except ValueError:
+        return render_template('erro.html', message='Invalid age value. Please enter a valid integer.')
     
-    if not billionaires:
-        return render_template('erro.html', message=f'No billionaires found under age: {age}')
-    
-    return render_template('top10/top10-age.html', billionaires=billionaires, age=age)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship, pi.age
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                WHERE pi.age <= ?
+                ORDER BY b.rank
+                LIMIT 10
+            '''
+            cursor = conn.execute(query, (age,))
+            billionaires = cursor.fetchall()
+        
+        if not billionaires:
+            return render_template('erro.html', message=f'No billionaires found under age: {age}')
+        
+        return render_template('top10/top10-age.html', billionaires=billionaires, age=age)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in top10_by_age: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in top10_by_age: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 # Billionaire Profile Route
@@ -198,21 +234,27 @@ def subject(subject):
 @app.route('/all-list')
 def all_list():
     """Complete list of billionaires."""
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship, pi.age
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        ORDER BY b.rank
-    '''
-    cursor = conn.execute(query)
-    billionaires = cursor.fetchall()
-    conn.close()
-    return render_template('all_list/all_list.html', billionaires=billionaires)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship, pi.age
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                ORDER BY b.rank
+            '''
+            cursor = conn.execute(query)
+            billionaires = cursor.fetchall()
+        return render_template('all_list/all_list.html', billionaires=billionaires)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in all_list: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in all_list: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 @app.route('/all-list/q1/<input>')
@@ -268,27 +310,37 @@ def all_list_by_last_name(input):
 @app.route('/all-list/q3/<input>')
 def all_list_by_wealth(input):
     """Filter billionaires by minimum net worth."""
-    min_wealth = float(input)
-    conn = get_db()
-    query = '''
-        SELECT 
-            b.rank, b.personName, b.finalWorth,
-            comp.source, pi.countryOfCitizenship, pi.age
-        FROM BILLIONARIES b
-        LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
-        LEFT JOIN WORKS w ON b.id = w.billionaire_id
-        LEFT JOIN COMPANY comp ON w.company_id = comp.id
-        WHERE b.finalWorth >= ?
-        ORDER BY b.finalWorth DESC
-    '''
-    cursor = conn.execute(query, (min_wealth,))
-    billionaires = cursor.fetchall()
-    conn.close()
+    try:
+        min_wealth = float(input)
+    except ValueError:
+        return render_template('erro.html', message='Invalid wealth value. Please enter a valid number.')
     
-    if not billionaires:
-        return render_template('erro.html', message=f'No billionaire found with net worth >= ${min_wealth}M')
-    
-    return render_template('all_list/all_list_wealth.html', billionaires=billionaires, min_wealth=min_wealth)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    b.rank, b.personName, b.finalWorth,
+                    comp.source, pi.countryOfCitizenship, pi.age
+                FROM BILLIONARIES b
+                LEFT JOIN PERSONAL_INFO pi ON b.personalInfo = pi.id
+                LEFT JOIN WORKS w ON b.id = w.billionaire_id
+                LEFT JOIN COMPANY comp ON w.company_id = comp.id
+                WHERE b.finalWorth >= ?
+                ORDER BY b.finalWorth DESC
+            '''
+            cursor = conn.execute(query, (min_wealth,))
+            billionaires = cursor.fetchall()
+        
+        if not billionaires:
+            return render_template('erro.html', message=f'No billionaire found with net worth >= ${min_wealth}M')
+        
+        return render_template('all_list/all_list_wealth.html', billionaires=billionaires, min_wealth=min_wealth)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in all_list_by_wealth: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in all_list_by_wealth: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 # Countries Routes
@@ -444,27 +496,37 @@ def industries_specific_billionaires(input):
 @app.route('/industries/q2/<input>')
 def industries_amount(input):
     """Industries with more than X billionaires."""
-    min_count = int(input)
-    conn = get_db()
-    query = '''
-        SELECT 
-            comp.category,
-            COUNT(DISTINCT b.id) as billionaireCount
-        FROM COMPANY comp
-        LEFT JOIN WORKS w ON comp.id = w.company_id
-        LEFT JOIN BILLIONARIES b ON w.billionaire_id = b.id
-        GROUP BY comp.category
-        HAVING COUNT(DISTINCT b.id) > ?
-        ORDER BY billionaireCount DESC
-    '''
-    cursor = conn.execute(query, (min_count,))
-    industries = cursor.fetchall()
-    conn.close()
+    try:
+        min_count = int(input)
+    except ValueError:
+        return render_template('erro.html', message='Invalid count value. Please enter a valid integer.')
     
-    if not industries:
-        return render_template('erro.html', message=f'No industry found with more than {min_count} billionaires')
-    
-    return render_template('industries/industries_amount_of_bil.html', industries=industries, min_count=min_count)
+    try:
+        with closing(get_db()) as conn:
+            query = '''
+                SELECT 
+                    comp.category,
+                    COUNT(DISTINCT b.id) as billionaireCount
+                FROM COMPANY comp
+                LEFT JOIN WORKS w ON comp.id = w.company_id
+                LEFT JOIN BILLIONARIES b ON w.billionaire_id = b.id
+                GROUP BY comp.category
+                HAVING COUNT(DISTINCT b.id) > ?
+                ORDER BY billionaireCount DESC
+            '''
+            cursor = conn.execute(query, (min_count,))
+            industries = cursor.fetchall()
+        
+        if not industries:
+            return render_template('erro.html', message=f'No industry found with more than {min_count} billionaires')
+        
+        return render_template('industries/industries_amount_of_bil.html', industries=industries, min_count=min_count)
+    except sqlite3.Error as e:
+        app.logger.error(f'Database error in industries_amount: {e}')
+        return render_template('erro.html', message='Database error occurred.')
+    except Exception as e:
+        app.logger.error(f'Unexpected error in industries_amount: {e}')
+        return render_template('erro.html', message='An unexpected error occurred.')
 
 
 @app.route('/industries/q3/<input>')
