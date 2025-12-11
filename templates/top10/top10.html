@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Top 10 Billionaires{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='top10.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="top10-container">
+    <h1>🏆 Top 10 Billionaires</h1>
+    
+    <div class="search-forms">
+        <form action="/top10/q1/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q1/' + this.country.value;">
+            <label>Search by Country:</label>
+            <input type="text" name="country" placeholder="e.g., United States" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <form action="/top10/q2/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q2/' + this.industry.value;">
+            <label>Search by Industry:</label>
+            <input type="text" name="industry" placeholder="e.g., Technology" required>
+            <button type="submit">Search</button>
+        </form>
+        
+        <form action="/top10/q3/" method="get" class="search-form" onsubmit="event.preventDefault(); window.location.href='/top10/q3/' + this.age.value;">
+            <label>Search by Max Age:</label>
+            <input type="number" name="age" placeholder="e.g., 50" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    
+    <div class="billionaires-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Wealth (Billions)</th>
+                    <th>Country</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for billionaire in billionaires %}
+                <tr>
+                    <td class="rank">{{ billionaire.rank }}</td>
+                    <td class="name">
+                        <a href="/subject/{{ billionaire.personName }}">{{ billionaire.personName }}</a>
+                    </td>
+                    <td class="wealth">${{ "%.1f"|format(billionaire.finalWorth / 1000) }}B</td>
+                    <td>{{ billionaire.countryOfCitizenship or 'N/A' }}</td>
+                    <td>{{ billionaire.source }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

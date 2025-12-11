@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Top 10 Billionaires - Age ≤ {{ age }}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='top10.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="top10-container">
+    <h1>🏆 Top 10 Billionaires Age ≤ {{ age }}</h1>
+    <a href="/top10" class="btn-back">← Back to Top 10</a>
+    
+    <div class="billionaires-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Wealth (Billions)</th>
+                    <th>Age</th>
+                    <th>Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for billionaire in billionaires %}
+                <tr>
+                    <td class="rank">{{ billionaire.rank }}</td>
+                    <td class="name">
+                        <a href="/subject/{{ billionaire.personName }}">{{ billionaire.personName }}</a>
+                    </td>
+                    <td class="wealth">${{ "%.1f"|format(billionaire.finalWorth / 1000) }}B</td>
+                    <td>{{ billionaire.age }}</td>
+                    <td>{{ billionaire.countryOfCitizenship or 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

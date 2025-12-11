@@ -1,0 +1,73 @@
+/* Home Page Styles */
+.home-container {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.home-container h1 {
+    text-align: center;
+    color: #667eea;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.billionaires-table {
+    margin-top: 2rem;
+}
+
+.billionaires-table table {
+    width: 100%;
+}
+
+.name a {
+    color: #667eea;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.name a:hover {
+    color: #5568d3;
+}
+
+.btn-view {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.btn-view:hover {
+    background: #5568d3;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .home-container h1 {
+        font-size: 2rem;
+    }
+    
+    .billionaires-table {
+        overflow-x: auto;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+    }
+}
