@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Dados sobre Bilionários</h1>
+<p>Selecione uma consulta abaixo:</p>
+
+<div class="menu">
+    <ul>
+        <li><a href="/q1">1. Todos bilionários dos EUA</a></li>
+        <li>
+            <form action="/q2" method="get" style="display:inline;">
+                <label>2. Número de bilionários com patrimônio maior que: </label>
+                <input type="number" name="x" value="1000" style="width: 80px;">
+                <button type="submit">Consultar</button>
+            </form>
+        </li>
+        <li><a href="/q3">3. Bilionários da região oeste dos EUA</a></li>
+        <li><a href="/q4">4. Bilionários do gênero feminino</a></li>
+        <li><a href="/q5">5. Cidade com maior número de bilionários</a></li>
+        <li><a href="/q6">6. Bilionários com menos de 50 anos</a></li>
+        <li><a href="/q7">7. Bilionários com mais de 50 anos e ranking <= 50</a></li>
+        <li><a href="/q8">8. Média de patrimônio por país</a></li>
+        <li><a href="/q9">9. Indústrias e contagem de bilionários</a></li>
+        <li><a href="/q10">10. Cidades com os maiores patrimônios</a></li>
+        <li><a href="/q11">11. Total tax e número de bilionários por país</a></li>
+        <li><a href="/q12">12. Bilionários por categorias e patrimônios acumulados</a></li>
+        <li><a href="/q13">13. GDP e média de patrimônio por países</a></li>
+        <li><a href="/q14">14. Self-made bilionários e educação terciária</a></li>
+    </ul>
+</div>
+{% endblock %}
